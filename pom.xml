@@ -21,6 +21,7 @@
   	<module>Hammer-core</module>
   	<module>Hammer-rest</module>
   	<module>Hammer-web</module>
+  	<module>Hammer-ui</module>
   </modules>
   <repositories>
 		<repository>
