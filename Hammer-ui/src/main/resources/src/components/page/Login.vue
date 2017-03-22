@@ -43,7 +43,8 @@
                     if (valid) {
                         localStorage.setItem('ms_username',self.ruleForm.username);
                         //这里做提交操作
-//                        this.get(contextPath + '/index',data=>{
+//                        this.get(contextPath + '/',data=>{
+//                            this.common.b('sss')
 //                            console.log(data)
 //                        });
                         self.$router.push('/main');

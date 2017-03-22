@@ -12,6 +12,7 @@
 
 node_modules/
 target/
+dist/
 .settings/
 .classpath
 .project
