@@ -9,11 +9,11 @@ import org.nutz.integration.shiro.ShiroFilter2;
  * @author kerbores kerbores@gmail.com
  *
  */
-@WebFilter(description = "thunder-shiro", urlPatterns = "/*", dispatcherTypes = {
+@WebFilter(filterName = "thunder-shiro", description = "thunder-shiro", urlPatterns = "/*", dispatcherTypes = {
 		DispatcherType.REQUEST,
 		DispatcherType.FORWARD,
 		DispatcherType.ERROR,
 		DispatcherType.INCLUDE })
-public class ShiroFilter extends ShiroFilter2 {
+public class A_ShiroFilter extends ShiroFilter2 {
 
 }

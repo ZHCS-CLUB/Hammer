@@ -4,19 +4,20 @@ import javax.servlet.DispatcherType;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.annotation.WebInitParam;
 
-import org.nutz.mvc.NutFilter;
+import com.alibaba.druid.support.http.WebStatFilter;
 
 /**
  * @author kerbores kerbores@gmail.com
  *
  */
-@WebFilter(description = "Nutz", urlPatterns = "/*", dispatcherTypes = {
+@WebFilter(filterName = "druid", description = "druid", urlPatterns = "/*", dispatcherTypes = {
 		DispatcherType.REQUEST,
 		DispatcherType.FORWARD,
-		DispatcherType.INCLUDE }, initParams = {
-		@WebInitParam(name = "modules", value = "club.zhcs.hammer.module.MainModule"),
+		DispatcherType.INCLUDE,
+		DispatcherType.ERROR
+}, initParams = {
 		@WebInitParam(name = "exclusions", value = "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*,/sigar")
 })
-public class HammerFilter extends NutFilter {
+public class B_DruidFilter extends WebStatFilter {
 
 }
