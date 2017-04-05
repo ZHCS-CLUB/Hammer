@@ -10,16 +10,12 @@ export default new Router({
             redirect: '/login'
         },
         {
-            path: '/main',
+            path: '/readme',
             component: resolve => require(['../components/common/Home.vue'], resolve),
             children:[
                 {
                     path: '/',
                     component: resolve => require(['../components/page/Readme.vue'], resolve)
-                },
-                {
-                    path:'/dataSource',
-                    component:resolve => require(['../components/page/dataSource.vue'], resolve)
                 },
                 {
                     path: '/basetable',

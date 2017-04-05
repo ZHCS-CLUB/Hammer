@@ -31,9 +31,6 @@
         components: {
             IEcharts
         },
-        created:function(){
-            document.title  = "配置中心 - 报表";
-        },
         data: () => ({
             line: {
                 color:["#20a0ff","#13CE66","#F7BA2A","#FF4949"],

@@ -14,11 +14,6 @@
     export default {
         components:{
             vHead, vSidebar
-        },
-        data: function (){
-            return {
-                title:"配置中心 - 概述"
-            }
         }
     }
 </script>

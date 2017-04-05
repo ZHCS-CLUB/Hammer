@@ -21,7 +21,6 @@
     export default {
         data: function(){
             return {
-                title:"配置中心报表",
                 mix:{
                     color:["#20a0ff","#13CE66","#F7BA2A","#FF4949","#61a0a8"],
                     legend: {

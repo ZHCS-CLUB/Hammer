@@ -75,7 +75,6 @@
                 return row.tag === value;
             },
             handleEdit(index, row) {
-                console.log(row);
                 this.$message('编辑第'+(index+1)+'行');
             },
             handleDelete(index, row) {
