@@ -28,7 +28,6 @@
 			<groupId>club.zhcs</groupId>
 			<artifactId>Hammer-ui</artifactId>
 			<version>${project.version}</version>
-			<type>war</type>
 		</dependency>
 	</dependencies>
 </project>

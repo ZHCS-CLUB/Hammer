@@ -36,6 +36,9 @@
                         </template>
                     </el-input>
                 </el-form-item>
+                <el-form-item prop="remenber">
+                    <el-checkbox v-model="ruleForm.remenber">记住我</el-checkbox>
+                </el-form-item>
                 <div class="login-btn">
                     <el-button type="primary"
                                @click="submitForm('ruleForm')">登录</el-button>
@@ -52,7 +55,8 @@ export default {
         return {
             ruleForm: {
                 username: '',
-                password: ''
+                password: '',
+                remenber: false
             },
             captcha: contextPath + '/captcha',
             rules: {
