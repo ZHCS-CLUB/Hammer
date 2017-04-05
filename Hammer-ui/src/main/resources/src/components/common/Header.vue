@@ -1,6 +1,6 @@
 <template>
     <div class="header">
-        <div class="logo">后台管理系统</div>
+        <div class="logo">Thunder VUE</div>
         <div class="user-info">
             <el-dropdown trigger="click"
                          @command="handleCommand">

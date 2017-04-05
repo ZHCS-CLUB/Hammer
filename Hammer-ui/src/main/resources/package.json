@@ -19,7 +19,7 @@
         "vue-quill-editor": "^1.1.1",
         "vue-router": "^2.3.0",
         "vue-simplemde": "^0.3.2",
-        "font-awesome": "4.7.0"
+        "font-awesome": "^4.7.0"
     },
     "devDependencies": {
         "autoprefixer": "^6.7.2",

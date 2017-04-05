@@ -174,3 +174,15 @@ a {
 .el-icon-lock:before {
     content: "\f023";
 }
+
+.el-icon-import:before {
+    content: "\f121";
+}
+
+.el-icon-compile:before {
+    content: "\f074";
+}
+
+.el-icon-deploy:before {
+    content: "\f0ee";
+}
