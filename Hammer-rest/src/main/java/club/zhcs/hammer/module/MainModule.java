@@ -1,6 +1,7 @@
 package club.zhcs.hammer.module;
 
 import org.nutz.dao.Dao;
+import org.nutz.integration.shiro.ShiroSessionProvider;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.lang.random.R;
 import org.nutz.lang.util.NutMap;
@@ -13,7 +14,12 @@ import org.nutz.mvc.annotation.IocBy;
 import org.nutz.mvc.annotation.Modules;
 import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
+import org.nutz.mvc.annotation.SessionBy;
+import org.nutz.mvc.annotation.UrlMappingBy;
 import org.nutz.mvc.ioc.provider.ComboIocProvider;
+import org.nutz.plugins.apidoc.ApidocUrlMapping;
+import org.nutz.plugins.apidoc.annotation.Api;
+import org.nutz.plugins.apidoc.annotation.ApiMatchMode;
 
 import club.zhcs.titans.nutz.captcha.JPEGView;
 import club.zhcs.titans.nutz.module.base.AbstractBaseModule;
@@ -27,7 +33,14 @@ import club.zhcs.titans.utils.db.Result;
 @Ok("json")
 @Fail("http:500")
 @AdaptBy(type = JsonAdaptor.class)
-@IocBy(type = ComboIocProvider.class, args = { "*anno", "club.zhcs", "*tx", "*js", "ioc" })
+@SessionBy(ShiroSessionProvider.class)
+@UrlMappingBy(ApidocUrlMapping.class)
+@IocBy(type = ComboIocProvider.class, args = {
+		"*anno", "club.zhcs",
+		"*tx",
+		"*js", "ioc",
+		"*jedis" })
+@Api(name = "Hammer", author = "Kerbores", description = "Nutz Hammer", match = ApiMatchMode.ALL)
 public class MainModule extends AbstractBaseModule {
 
 	@Inject
