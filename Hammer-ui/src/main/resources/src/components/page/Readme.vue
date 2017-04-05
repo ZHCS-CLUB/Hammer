@@ -2,7 +2,7 @@
     <div>
         <div class="crumbs">
             <el-breadcrumb separator="/">
-                <el-breadcrumb-item><i class="el-icon-setting"></i> 自述</el-breadcrumb-item>
+                <el-breadcrumb-item><i class="el-icon-setting fa fa-user"></i> 项目概述</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <div class="ms-doc">
@@ -49,7 +49,7 @@
 <style scoped>
     .ms-doc{
         width:100%;
-        max-width: 980px;
+        max-width: 100%;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
     }
     .ms-doc h3{

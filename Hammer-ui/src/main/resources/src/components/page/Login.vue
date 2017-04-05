@@ -7,8 +7,8 @@
                      ref="ruleForm"
                      label-width="0px"
                      class="demo-ruleForm">
-                <el-form-item prop="username">
-                    <el-input v-model="ruleForm.username"
+                <el-form-item prop="userName">
+                    <el-input v-model="ruleForm.userName"
                               placeholder="请输入用户名"
                               icon="user"
                               @keyup.enter.native="submitForm('ruleForm')">
@@ -36,8 +36,8 @@
                         </template>
                     </el-input>
                 </el-form-item>
-                <el-form-item prop="remenber">
-                    <el-checkbox v-model="ruleForm.remenber">记住我</el-checkbox>
+                <el-form-item prop="rememberMe">
+                    <el-checkbox v-model="ruleForm.rememberMe">记住我</el-checkbox>
                 </el-form-item>
                 <div class="login-btn">
                     <el-button type="primary"
@@ -54,13 +54,13 @@ export default {
     data: function () {
         return {
             ruleForm: {
-                username: '',
+                userName: '',
                 password: '',
-                remenber: false
+                rememberMe: true
             },
             captcha: contextPath + '/captcha',
             rules: {
-                username: [
+                userName: [
                     { required: true, message: '请输入用户名', trigger: 'blur' }
                 ],
                 password: [
@@ -77,8 +77,10 @@ export default {
             const self = this;
             self.$refs[formName].validate((valid) => {
                 if (valid) {
-                    localStorage.setItem('ms_username', self.ruleForm.username);
-                    self.$router.push('/readme');
+                    self.postBody('/user/login', { data: self.ruleForm }, data => {
+                        localStorage.setItem('loginUser', data.data.loginUser.realName || data.data.loginUser.name);
+                        self.$router.push('/readme');
+                    })
                 } else {
                     return false;
                 }
@@ -122,7 +124,7 @@ export default {
     left: 50%;
     top: 50%;
     width: 300px;
-    height: 200px;
+    height: 280px;
     margin: -150px 0 0 -190px;
     padding: 40px;
     border-radius: 5px;

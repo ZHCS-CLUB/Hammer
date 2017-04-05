@@ -1,6 +1,5 @@
 package club.zhcs.hammer.module.acl;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.nutz.ioc.loader.annotation.Inject;
@@ -35,7 +34,7 @@ public class UserModule extends AbstractBaseModule {
 
 	@At
 	@POST
-	public Result login(ApiRequest<UserLoginDto> request, HttpSession session, HttpServletRequest request2) {
+	public Result login(ApiRequest<UserLoginDto> request, HttpSession session) {
 		if (Strings.equalsIgnoreCase(request.getData().getCaptcha(), session.getAttribute(JPEGView.CAPTCHA).toString())) {
 			Result result = shiroUserService.login(request.getData().getUserName(), request.getData().getPassword(), Lang.getIP(Mvcs.getReq()));
 			if (result.isSuccess()) {
