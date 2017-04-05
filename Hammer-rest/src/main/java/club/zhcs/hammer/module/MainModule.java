@@ -15,12 +15,14 @@ import org.nutz.mvc.annotation.Modules;
 import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
 import org.nutz.mvc.annotation.SessionBy;
+import org.nutz.mvc.annotation.SetupBy;
 import org.nutz.mvc.annotation.UrlMappingBy;
 import org.nutz.mvc.ioc.provider.ComboIocProvider;
 import org.nutz.plugins.apidoc.ApidocUrlMapping;
 import org.nutz.plugins.apidoc.annotation.Api;
 import org.nutz.plugins.apidoc.annotation.ApiMatchMode;
 
+import club.zhcs.hammer.ThunderSetup;
 import club.zhcs.titans.nutz.captcha.JPEGView;
 import club.zhcs.titans.nutz.module.base.AbstractBaseModule;
 import club.zhcs.titans.utils.db.Result;
@@ -35,6 +37,7 @@ import club.zhcs.titans.utils.db.Result;
 @AdaptBy(type = JsonAdaptor.class)
 @SessionBy(ShiroSessionProvider.class)
 @UrlMappingBy(ApidocUrlMapping.class)
+@SetupBy(ThunderSetup.class)
 @IocBy(type = ComboIocProvider.class, args = {
 		"*anno", "club.zhcs",
 		"*tx",
