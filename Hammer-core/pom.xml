@@ -7,4 +7,11 @@
   </parent>
   <artifactId>Hammer-core</artifactId>
   <build/>
+  <dependencies>
+  	<dependency>
+  		<groupId>club.zhcs</groupId>
+  		<artifactId>titans</artifactId>
+  		<version>2.0.8-SNAPSHOT</version>
+  	</dependency>
+  </dependencies>
 </project>
