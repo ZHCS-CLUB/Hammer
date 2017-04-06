@@ -9,6 +9,7 @@ import org.nutz.lang.Strings;
 import org.nutz.lang.util.NutMap;
 import org.nutz.mvc.Mvcs;
 import org.nutz.mvc.annotation.At;
+import org.nutz.mvc.annotation.Filters;
 import org.nutz.mvc.annotation.POST;
 import org.nutz.plugins.apidoc.annotation.Api;
 
@@ -34,6 +35,7 @@ public class UserModule extends AbstractBaseModule {
 
 	@At
 	@POST
+	@Filters
 	public Result login(ApiRequest<UserLoginDto> request, HttpSession session) {
 		if (Strings.equalsIgnoreCase(request.getData().getCaptcha(), session.getAttribute(JPEGView.CAPTCHA).toString())) {
 			Result result = shiroUserService.login(request.getData().getUserName(), request.getData().getPassword(), Lang.getIP(Mvcs.getReq()));

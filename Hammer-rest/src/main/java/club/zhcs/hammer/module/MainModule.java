@@ -9,7 +9,10 @@ import org.nutz.mvc.View;
 import org.nutz.mvc.adaptor.JsonAdaptor;
 import org.nutz.mvc.annotation.AdaptBy;
 import org.nutz.mvc.annotation.At;
+import org.nutz.mvc.annotation.By;
+import org.nutz.mvc.annotation.ChainBy;
 import org.nutz.mvc.annotation.Fail;
+import org.nutz.mvc.annotation.Filters;
 import org.nutz.mvc.annotation.IocBy;
 import org.nutz.mvc.annotation.Modules;
 import org.nutz.mvc.annotation.Ok;
@@ -17,12 +20,17 @@ import org.nutz.mvc.annotation.Param;
 import org.nutz.mvc.annotation.SessionBy;
 import org.nutz.mvc.annotation.SetupBy;
 import org.nutz.mvc.annotation.UrlMappingBy;
+import org.nutz.mvc.filter.CheckSession;
 import org.nutz.mvc.ioc.provider.ComboIocProvider;
 import org.nutz.plugins.apidoc.ApidocUrlMapping;
 import org.nutz.plugins.apidoc.annotation.Api;
 import org.nutz.plugins.apidoc.annotation.ApiMatchMode;
 
+import club.zhcs.hammer.ThunderApplication.SessionKeys;
 import club.zhcs.hammer.ThunderSetup;
+import club.zhcs.hammer.chain.ThunderChainMaker;
+import club.zhcs.hammer.ext.shiro.anno.ThunderRequiresRoles;
+import club.zhcs.hammer.vo.InstalledRole;
 import club.zhcs.titans.nutz.captcha.JPEGView;
 import club.zhcs.titans.nutz.module.base.AbstractBaseModule;
 import club.zhcs.titans.utils.db.Result;
@@ -38,11 +46,13 @@ import club.zhcs.titans.utils.db.Result;
 @SessionBy(ShiroSessionProvider.class)
 @UrlMappingBy(ApidocUrlMapping.class)
 @SetupBy(ThunderSetup.class)
+@ChainBy(type = ThunderChainMaker.class, args = {})
 @IocBy(type = ComboIocProvider.class, args = {
 		"*anno", "club.zhcs",
 		"*tx",
 		"*js", "ioc",
 		"*jedis" })
+@Filters({ @By(type = CheckSession.class, args = { SessionKeys.USER_KEY, "/" }) })
 @Api(name = "Hammer", author = "Kerbores", description = "Nutz Hammer", match = ApiMatchMode.ALL)
 public class MainModule extends AbstractBaseModule {
 
@@ -50,8 +60,15 @@ public class MainModule extends AbstractBaseModule {
 	Dao dao;
 
 	@At("/")
+	@Filters
 	public Result index() {
 		return R.random(0, 10) > 5 ? Result.success() : Result.fail("test");
+	}
+
+	@At
+	@ThunderRequiresRoles(InstalledRole.SU)
+	public Result test() {
+		return Result.success();
 	}
 
 	@At
@@ -71,6 +88,7 @@ public class MainModule extends AbstractBaseModule {
 	}
 
 	@At
+	@Filters
 	public View captcha() {
 		return new JPEGView(null);
 	}
