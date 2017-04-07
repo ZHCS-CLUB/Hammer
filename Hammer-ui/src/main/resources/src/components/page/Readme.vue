@@ -65,13 +65,13 @@
                 </el-collapse>
                 <h2>运行项目</h2>
     
-                <el-steps :space="100"
+                <el-steps :space="300"
                           direction="vertical"
                           :active="runStep">
                     <el-step title="步骤 1"
                              icon="import">
                         <template slot="description">
-                            这里来写step1的内容
+                            导入项目
                         </template>
                     </el-step>
                     <el-step title="步骤 2"
@@ -130,7 +130,6 @@ export default {
     },
     methods: {
         changeStep(step) {
-            console.log(1);
             this.runStep = step;
         },
         next() {

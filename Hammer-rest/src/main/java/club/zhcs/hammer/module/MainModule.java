@@ -1,8 +1,11 @@
 package club.zhcs.hammer.module;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.nutz.dao.Dao;
 import org.nutz.integration.shiro.ShiroSessionProvider;
 import org.nutz.ioc.loader.annotation.Inject;
+import org.nutz.lang.Lang;
 import org.nutz.lang.random.R;
 import org.nutz.lang.util.NutMap;
 import org.nutz.mvc.View;
@@ -63,6 +66,12 @@ public class MainModule extends AbstractBaseModule {
 	@Filters
 	public Result index() {
 		return R.random(0, 10) > 5 ? Result.success() : Result.fail("test");
+	}
+
+	@At
+	@Filters
+	public Result ip(HttpServletRequest request) {
+		return Result.success().addData("ip", Lang.getIP(request));
 	}
 
 	@At
