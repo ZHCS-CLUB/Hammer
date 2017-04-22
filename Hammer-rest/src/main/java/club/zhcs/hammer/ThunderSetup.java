@@ -69,7 +69,6 @@ public class ThunderSetup implements Setup {
 
 		Ioc ioc = nc.getIoc();
 
-
 		final PropertiesProxy p = ioc.get(PropertiesProxy.class, "config");
 		nc.setAttribute("rs", p.get("app-rs", ""));
 		nc.setAttribute("appnm", p.get("app-name", "Thunder"));
@@ -82,8 +81,8 @@ public class ThunderSetup implements Setup {
 			}
 		} catch (Exception e) {
 		}
-		NutShiro.DefaultLoginURL = "/";
-		NutShiro.DefaultNoAuthURL = "/403";
+		NutShiro.DefaultLoginURL = "403";
+		NutShiro.DefaultNoAuthURL = "403";
 
 		if (!Charset.defaultCharset().name().equalsIgnoreCase(Encoding.UTF8)) {
 			log.warn("This project must run in UTF-8, pls add -Dfile.encoding=UTF-8 to JAVA_OPTS");

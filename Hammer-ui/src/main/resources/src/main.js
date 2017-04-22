@@ -10,6 +10,7 @@ import axios from 'axios';
 global.contextPath = '/Hammer-rest';
 
 Vue.prototype.requestFail = function(error, message) {
+    console.log(error.response);
     if (error.response) {
         console.log(error.response.data);
         console.log(error.response.status);

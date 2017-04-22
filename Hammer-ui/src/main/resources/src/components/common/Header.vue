@@ -5,9 +5,9 @@
             <el-dropdown trigger="click"
                          @command="handleCommand">
                 <span class="el-dropdown-link">
-                        <img class="user-logo" src="../../../static/img/img.jpg">
-                        {{username}}
-                    </span>
+                                        <img class="user-logo" src="../../../static/img/img.jpg">
+                                        {{username}}
+                                    </span>
                 <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item command="loginout">退出</el-dropdown-item>
                 </el-dropdown-menu>
@@ -31,8 +31,11 @@ export default {
     methods: {
         handleCommand(command) {
             if (command == 'loginout') {
-                localStorage.removeItem('loginUser')
-                this.$router.push('/login');
+                const self = this;
+                self.get('/user/logout', data => {
+                    localStorage.removeItem('loginUser')
+                    this.$router.push('/login');
+                })
             }
         }
     }

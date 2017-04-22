@@ -20,12 +20,4 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<destDir>${project.build.outputDirectory}/META-INF/resources/</destDir>
 	</properties>
-	<dependencies>
-		<dependency>
-			<groupId>club.zhcs</groupId>
-			<artifactId>Hammer-rest</artifactId>
-			<version>${project.version}</version>
-			<type>war</type>
-		</dependency>
-	</dependencies>
 </project>

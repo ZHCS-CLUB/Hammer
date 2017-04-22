@@ -34,5 +34,10 @@
 			<artifactId>javax.servlet-api</artifactId>
 			<version>3.0.1</version>
 		</dependency>
+		<dependency>
+			<groupId>club.zhcs</groupId>
+			<artifactId>Hammer-ui</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 	</dependencies>
 </project>

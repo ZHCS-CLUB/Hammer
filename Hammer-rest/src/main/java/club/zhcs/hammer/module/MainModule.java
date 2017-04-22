@@ -67,6 +67,13 @@ public class MainModule extends AbstractBaseModule {
 	public Result index() {
 		return R.random(0, 10) > 5 ? Result.success() : Result.fail("test");
 	}
+	
+	@At("/403")
+	@Filters
+	@Ok("http:403")
+	public Result _403() {
+		return Result.success();
+	}
 
 	@At
 	@Filters
@@ -81,17 +88,20 @@ public class MainModule extends AbstractBaseModule {
 	}
 
 	@At
+	@Filters
 	public Result post(@Param("id") int id, @Param("name") String name) {
 		return Result.success(NutMap.NEW().addv("id", id).addv("name", name));
 	}
 
 	@At
+	@Filters
 	@AdaptBy(type = JsonAdaptor.class)
 	public Result postBody(NutMap data) {
 		return Result.success(data);
 	}
 
 	@At
+	@Filters
 	public Result db() {
 		return Result.success().addData("db", dao.meta());
 	}

@@ -135,6 +135,11 @@ export default {
         next() {
             if (this.runStep++ > 2) this.runStep = 1;
         }
+    },
+    created:function(){
+        this.get('/test',data=>{
+            console.log(data);
+        })
     }
 }
 </script>

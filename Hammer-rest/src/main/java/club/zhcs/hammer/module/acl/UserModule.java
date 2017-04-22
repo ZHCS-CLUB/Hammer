@@ -2,6 +2,7 @@ package club.zhcs.hammer.module.acl;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.shiro.SecurityUtils;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.json.Json;
 import org.nutz.lang.Lang;
@@ -10,6 +11,7 @@ import org.nutz.lang.util.NutMap;
 import org.nutz.mvc.Mvcs;
 import org.nutz.mvc.annotation.At;
 import org.nutz.mvc.annotation.Filters;
+import org.nutz.mvc.annotation.GET;
 import org.nutz.mvc.annotation.POST;
 import org.nutz.plugins.apidoc.annotation.Api;
 
@@ -33,6 +35,15 @@ public class UserModule extends AbstractBaseModule {
 	@Inject
 	ShiroUserService shiroUserService;
 
+	/**
+	 * 登录
+	 * 
+	 * @param request
+	 *            登录请求对象
+	 * @param session
+	 *            httpSession
+	 * @return 登录结果
+	 */
 	@At
 	@POST
 	@Filters
@@ -54,6 +65,20 @@ public class UserModule extends AbstractBaseModule {
 		} else {
 			return Result.fail("验证码输入错误");
 		}
+	}
+
+	/**
+	 * 退出登录
+	 * 
+	 * @param session
+	 * @return
+	 */
+	@At
+	@GET
+	@Filters
+	public Result logout() {
+		SecurityUtils.getSubject().logout();
+		return Result.success();
 	}
 
 }
