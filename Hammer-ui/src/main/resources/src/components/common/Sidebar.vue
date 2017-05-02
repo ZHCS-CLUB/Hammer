@@ -31,7 +31,7 @@
             <el-submenu index="6">
                 <template slot="title"><i class="el-icon- fa fa-camera"></i>监控面板</template>
                 <el-menu-item index="/datasource"><i class="fa fa-database"></i> Druid监控</el-menu-item>
-                <el-menu-item index="basecharts"><i class="fa fa-server"></i> 运行环境</el-menu-item>
+                <el-menu-item index="/runtime"><i class="fa fa-server"></i> 运行环境</el-menu-item>
                 <el-menu-item index="basecharts"><i class="fa fa-history"></i> 登录日志</el-menu-item>
                 <el-menu-item index="basecharts"><i class="fa fa-tags"></i> 操作日志</el-menu-item>
             </el-submenu>

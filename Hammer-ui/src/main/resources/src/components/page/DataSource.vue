@@ -338,7 +338,7 @@ import axios from 'axios';
                 }
             }
         },
-        created:function () {
+        mounted:function () {
             axios.get(baseUrl + '/druid/basic.json').then(resp=>{
                 console.log(resp);
                 this.$data.main = this.map2List(resp.data.Content);

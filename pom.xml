@@ -39,4 +39,7 @@
 			</snapshots>
 		</repository>
 	</repositories>
+  <properties>
+  	<nutz.version>1.r.61.r2</nutz.version>
+  </properties>
 </project>

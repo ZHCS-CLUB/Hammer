@@ -20,6 +20,10 @@ export default new Router({
                     component: resolve => require(['../components/page/DataSource.vue'], resolve)
                 },
                 {
+                    path: '/runtime',
+                    component: resolve => require(['../components/page/Runtime.vue'], resolve)
+                },
+                {
                     path: '/basetable',
                     component: resolve => require(['../components/page/BaseTable.vue'], resolve)
                 },
