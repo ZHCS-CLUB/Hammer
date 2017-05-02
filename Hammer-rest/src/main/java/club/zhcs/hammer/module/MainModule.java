@@ -24,6 +24,7 @@ import org.nutz.mvc.annotation.SessionBy;
 import org.nutz.mvc.annotation.SetupBy;
 import org.nutz.mvc.annotation.UrlMappingBy;
 import org.nutz.mvc.filter.CheckSession;
+import org.nutz.mvc.filter.CrossOriginFilter;
 import org.nutz.mvc.ioc.provider.ComboIocProvider;
 import org.nutz.plugins.apidoc.ApidocUrlMapping;
 import org.nutz.plugins.apidoc.annotation.Api;
@@ -55,7 +56,7 @@ import club.zhcs.titans.utils.db.Result;
 		"*tx",
 		"*js", "ioc",
 		"*jedis" })
-@Filters({ @By(type = CheckSession.class, args = { SessionKeys.USER_KEY, "/" }) })
+@Filters({ @By(type = CheckSession.class, args = { SessionKeys.USER_KEY, "/" }),@By(type=CrossOriginFilter.class) })
 @Api(name = "Hammer", author = "Kerbores", description = "Nutz Hammer", match = ApiMatchMode.ALL)
 public class MainModule extends AbstractBaseModule {
 

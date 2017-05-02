@@ -10,9 +10,11 @@ import org.nutz.lang.Strings;
 import org.nutz.lang.util.NutMap;
 import org.nutz.mvc.Mvcs;
 import org.nutz.mvc.annotation.At;
+import org.nutz.mvc.annotation.By;
 import org.nutz.mvc.annotation.Filters;
 import org.nutz.mvc.annotation.GET;
 import org.nutz.mvc.annotation.POST;
+import org.nutz.mvc.filter.CrossOriginFilter;
 import org.nutz.plugins.apidoc.annotation.Api;
 
 import club.zhcs.hammer.ThunderApplication.SessionKeys;
@@ -46,9 +48,9 @@ public class UserModule extends AbstractBaseModule {
 	 */
 	@At
 	@POST
-	@Filters
+	@Filters(@By(type=CrossOriginFilter.class))
 	public Result login(ApiRequest<UserLoginDto> request, HttpSession session) {
-		if (Strings.equalsIgnoreCase(request.getData().getCaptcha(), session.getAttribute(JPEGView.CAPTCHA).toString())) {
+		if (Strings.equalsIgnoreCase(request.getData().getCaptcha(), Strings.safeToString(session.getAttribute(JPEGView.CAPTCHA), "") )) {
 			Result result = shiroUserService.login(request.getData().getUserName(), request.getData().getPassword(), Lang.getIP(Mvcs.getReq()));
 			if (result.isSuccess()) {
 				// 登录成功处理

@@ -58,7 +58,7 @@ export default {
                 password: '',
                 rememberMe: true
             },
-            captcha: contextPath + '/captcha',
+            captcha: baseUrl + '/captcha',
             rules: {
                 userName: [
                     { required: true, message: '请输入用户名', trigger: 'blur' }
@@ -71,7 +71,7 @@ export default {
     },
     methods: {
         refreshCaptcha() {
-            this.captcha = contextPath + '/captcha?' + Math.random();
+            this.captcha = baseUrl + '/captcha?' + Math.random();
         },
         submitForm(formName) {
             const self = this;

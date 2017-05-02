@@ -7,10 +7,9 @@ import 'element-ui/lib/theme-default/index.css'; // 默认主题
 import "babel-polyfill";
 import axios from 'axios';
 
-global.contextPath = '/Hammer-rest';
+global.baseUrl = process.env.NODE_ENV == "development" ? 'Hammer-rest' : '';
 
 Vue.prototype.requestFail = function(error, message) {
-    console.log(error.response);
     if (error.response) {
         console.log(error.response.data);
         console.log(error.response.status);
@@ -35,7 +34,7 @@ Vue.prototype.bizFail = function(reason) {
 Vue.prototype.get = function(url, success) { //全局get请求函数
     const message = this.$message;
     const error = this.requestFail;
-    axios.get(contextPath + url).then(resp => {
+    axios.get(baseUrl + url).then(resp => {
         if (resp.status == 200 && resp.data.operationState == 'SUCCESS') {
             success(resp.data);
         } else {
@@ -48,7 +47,7 @@ Vue.prototype.get = function(url, success) { //全局get请求函数
 Vue.prototype.postBody = function(url, body, success) { //全局post请求函数
     const message = this.$message;
     const error = this.requestFail;
-    axios.post(contextPath + url, body)
+    axios.post(baseUrl + url, body)
         .then(resp => {
             if (resp.status == 200 && resp.data.operationState == 'SUCCESS') {
                 success(resp.data);
@@ -67,7 +66,7 @@ Vue.prototype.postForm = function(url, body, success) { //全局post请求函数
     for (var key in body) {
         params.append(key, body[key]);
     }
-    axios.post(contextPath + url, params)
+    axios.post(baseUrl + url, params)
         .then(resp => {
             if (resp.status == 200 && resp.data.operationState == 'SUCCESS') {
                 success(resp.data);
@@ -86,7 +85,7 @@ Vue.prototype.upload = function(url, body, success) { //全局文件上传请求
     for (var key in body) {
         params.append(key, body[key]);
     }
-    axios.post(contextPath + url, params, {
+    axios.post(baseUrl + url, params, {
             headers: { 'Content-Type': 'multipart/form-data' }
         })
         .then(resp => {
@@ -101,6 +100,9 @@ Vue.prototype.upload = function(url, body, success) { //全局文件上传请求
         });
 }
 Vue.use(ElementUI);
+(function() {
+    console.log(baseUrl);
+})()
 new Vue({
     router,
     render: h => h(App)
