@@ -16,7 +16,7 @@
                     <IEcharts :option="bar"></IEcharts>
                 </div>
             </el-tab-pane>
-            <el-tab-pane label="服务器配置" name="config">服务器配置</el-tab-pane>
+            <el-tab-pane label="告警配置" name="config">告警配置</el-tab-pane>
             <el-tab-pane label="服务器信息" name="info">服务器信息</el-tab-pane>
         </el-tabs>
     </div>
@@ -41,62 +41,72 @@ export default {
                     trigger: 'axis'
                 },
                 legend: {
-                    data: ['CPU', 'JVM', 'RAM', 'SWAP', 'NETWORK IN', 'NETWORK OUT']
+                    data: ['CPU', 'JVM', 'RAM', 'SWAP', "DISK", 'NETWORK IN', 'NETWORK OUT']
                 },
                 xAxis: [{
                     type: 'category',
                     boundaryGap: true,
                     data: []
                 }],
-                yAxis : [ {
-						type : 'value',
-						scale : true,
-						name : '百分比',
-						max : 100,
-						min : 0,
-						boundaryGap : [ 0.2, 0.2 ]
-					}, {
-						type : 'value',
-						scale : true,
-						max : 5000,
-						min : 0,
-						name : ' k/s',
-						boundaryGap : [ 0.2, 0.2 ]
-					} ],
-					series : [ {
-						name : 'CPU',
-						type : 'line',
-						smooth : true,
-						data : []
-					}, {
-						name : 'JVM',
-						type : 'line',
-						smooth : true,
-						data : []
-					}, {
-						name : 'RAM',
-						type : 'line',
-						smooth : true,
-						data : []
-					}, {
-						name : 'SWAP',
-						type : 'line',
-						smooth : true,
-						yAxisIndex : 0,
-						data : []
-					}, {
-						name : 'NETWORK IN',
-						type : 'line',
-						smooth : true,
-						yAxisIndex : 1,
-						data : []
-					}, {
-						name : 'NETWORK OUT',
-						type : 'line',
-						smooth : true,
-						yAxisIndex : 1,
-						data : []
-					} ]
+                yAxis: [{
+                    type: 'value',
+                    scale: true,
+                    name: '百分比',
+                    max: 100,
+                    min: 0,
+                    boundaryGap: [0.2, 0.2]
+                }, {
+                    type: 'value',
+                    scale: true,
+                    max: 5000,
+                    min: 0,
+                    name: ' k/s',
+                    boundaryGap: [0.2, 0.2]
+                }],
+                series: [{
+                    name: 'CPU',
+                    type: 'line',
+                    smooth: true,
+                    data: []
+                }, {
+                    name: 'JVM',
+                    type: 'line',
+                    smooth: true,
+                    data: []
+                }, {
+                    name: 'RAM',
+                    type: 'line',
+                    smooth: true,
+                    data: []
+                },
+                {
+                    name: 'SWAP',
+                    type: 'line',
+                    smooth: true,
+                    yAxisIndex: 0,
+                    data: []
+                },
+                {
+                    name: 'DISK',
+                    type: 'line',
+                    smooth: true,
+                    yAxisIndex: 0,
+                    data: []
+                },
+
+                {
+                    name: 'NETWORK IN',
+                    type: 'line',
+                    smooth: true,
+                    yAxisIndex: 1,
+                    data: []
+                }, {
+                    name: 'NETWORK OUT',
+                    type: 'line',
+                    smooth: true,
+                    yAxisIndex: 1,
+                    data: []
+                }]
             },
             bar: {
                 color: ["#20a0ff", "#13CE66", "#F7BA2A", "#FF4949"],
@@ -123,7 +133,28 @@ export default {
         }
     },
     mounted() {
-        console.log('mounted');
+        const self = this;
+        setInterval(function () {
+            self.get('/sigar/api?type=ALL', res => {
+                self.$data.line.xAxis[0].data.push(new Date().toLocaleTimeString());//时间戳
+                self.$data.line.series[0].data.push(res.data.cpuUsage);
+                self.$data.line.series[1].data.push(res.data.jvmUasge);
+                self.$data.line.series[2].data.push(res.data.ramUasge);
+                self.$data.line.series[3].data.push(res.data.swapUasge);
+                self.$data.line.series[4].data.push(res.data.diskUsage);
+                self.$data.line.series[5].data.push(res.data.niUsage);
+                self.$data.line.series[6].data.push(res.data.noUsage);
+            })
+            // for (var index in self.$data.line.series) {
+            //     if (self.$data.line.series[index].length > 15) {
+            //         self.$data.line.series[index] = self.$data.line.series[index].slice(1, 15);
+            //     }
+            // }
+            // if (self.$data.line.xAxis[0].length > 15) {
+            //     self.$data.line.xAxis[0] = self.$data.line.xAxis[0].slice(1, 15)
+            // }
+        }, 2000)
+
     }
 };
 </script>

@@ -19,7 +19,7 @@
 export default {
     data() {
         return {
-            name: 'linxin'
+            name: 'Kerbores'
         }
     },
     computed: {
