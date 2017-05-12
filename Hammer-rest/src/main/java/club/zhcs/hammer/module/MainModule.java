@@ -31,7 +31,7 @@ import org.nutz.plugins.apidoc.annotation.Api;
 import org.nutz.plugins.apidoc.annotation.ApiMatchMode;
 
 import club.zhcs.hammer.ThunderApplication.SessionKeys;
-import club.zhcs.hammer.ThunderSetup;
+import club.zhcs.hammer.HammerSetup;
 import club.zhcs.hammer.chain.ThunderChainMaker;
 import club.zhcs.hammer.ext.shiro.anno.ThunderRequiresRoles;
 import club.zhcs.hammer.vo.InstalledRole;
@@ -49,7 +49,7 @@ import club.zhcs.titans.utils.db.Result;
 @AdaptBy(type = JsonAdaptor.class)
 @SessionBy(ShiroSessionProvider.class)
 @UrlMappingBy(ApidocUrlMapping.class)
-@SetupBy(ThunderSetup.class)
+@SetupBy(HammerSetup.class)
 @ChainBy(type = ThunderChainMaker.class, args = {})
 @IocBy(type = ComboIocProvider.class, args = {
 		"*anno", "club.zhcs",

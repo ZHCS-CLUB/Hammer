@@ -38,7 +38,7 @@ import club.zhcs.hammer.vo.InstallPermission;
 import club.zhcs.hammer.vo.InstalledRole;
 import net.sf.ehcache.CacheManager;
 
-public class ThunderSetup implements Setup {
+public class HammerSetup implements Setup {
 	private static final Log log = Logs.get();
 
 	Role admin;
