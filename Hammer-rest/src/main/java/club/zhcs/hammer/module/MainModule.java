@@ -30,8 +30,8 @@ import org.nutz.plugins.apidoc.ApidocUrlMapping;
 import org.nutz.plugins.apidoc.annotation.Api;
 import org.nutz.plugins.apidoc.annotation.ApiMatchMode;
 
-import club.zhcs.hammer.ThunderApplication.SessionKeys;
 import club.zhcs.hammer.HammerSetup;
+import club.zhcs.hammer.ThunderApplication.SessionKeys;
 import club.zhcs.hammer.chain.ThunderChainMaker;
 import club.zhcs.hammer.ext.shiro.anno.ThunderRequiresRoles;
 import club.zhcs.hammer.vo.InstalledRole;
@@ -56,7 +56,7 @@ import club.zhcs.titans.utils.db.Result;
 		"*tx",
 		"*js", "ioc",
 		"*jedis" })
-@Filters({ @By(type = CheckSession.class, args = { SessionKeys.USER_KEY, "/" }),@By(type=CrossOriginFilter.class) })
+@Filters({ @By(type = CheckSession.class, args = { SessionKeys.USER_KEY, "/403" }), @By(type = CrossOriginFilter.class) })
 @Api(name = "Hammer", author = "Kerbores", description = "Nutz Hammer", match = ApiMatchMode.ALL)
 public class MainModule extends AbstractBaseModule {
 
@@ -68,7 +68,7 @@ public class MainModule extends AbstractBaseModule {
 	public Result index() {
 		return R.random(0, 10) > 5 ? Result.success() : Result.fail("test");
 	}
-	
+
 	@At("/403")
 	@Filters
 	@Ok("http:403")

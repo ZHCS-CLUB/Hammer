@@ -15,6 +15,10 @@ export default new Router({
                     path: '/',
                     component: resolve => require(['../components/page/Readme.vue'], resolve)
                 },
+                 {
+                    path: '/user',
+                    component: resolve => require(['../components/page/User.vue'], resolve)
+                },
                 {
                     path: '/datasource',
                     component: resolve => require(['../components/page/DataSource.vue'], resolve)

@@ -1,0 +1,240 @@
+<template>
+    <div>
+        <div class="crumbs">
+            <el-breadcrumb separator="/">
+                <el-breadcrumb-item><i class="fa fa-home"></i> 首页</el-breadcrumb-item>
+                <el-breadcrumb-item><i class="fa fa-user"></i> 用户</el-breadcrumb-item>
+                <el-breadcrumb-item><i class="fa fa-list"></i> 用户列表</el-breadcrumb-item>
+            </el-breadcrumb>
+        </div>
+        <el-row>
+            <el-col :span="6">
+                <el-input placeholder="请输入内容" v-model="searchKey" icon="search">
+                    <div slot="append">
+                        <el-button type="primary" icon="search">GO</el-button>
+                    </div>
+                </el-input>
+            </el-col>
+            <el-col :span="6" :offset="12">
+                <el-button type="primary" icon="plus" @click="addEditShow = true">添加用户</el-button>
+            </el-col>
+        </el-row>
+        <el-table :data="pager.entities" border style="width: 100%">
+            <el-table-column prop="id" label="ID" sortable>
+            </el-table-column>
+            <el-table-column prop="name" label="用户名">
+            </el-table-column>
+            <el-table-column prop="realName" label="姓名">
+            </el-table-column>
+            <el-table-column prop="createTime" label="创建时间" :formatter="formatter">
+            </el-table-column>
+            <el-table-column prop="status" label="状态">
+                <template scope="scope">
+                    <el-tag :type="scope.row.status === 'A' ? 'success' : 'danger'" close-transition>{{scope.row.status == 'A' ? 'ACTIVIED' : 'DISABLED'}}</el-tag>
+                </template>
+            </el-table-column>
+            <el-table-column label="操作">
+                <template scope="scope">
+                        <el-dropdown>
+                            <el-button type="primary">
+                               操作<i class="el-icon-caret-bottom el-icon--right"></i>
+                            </el-button>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item >
+                                    <div @click="handleEdit(scope.$index,scope.row)"> <i class="fa fa-edit"></i> 编辑用户</div>
+                                </el-dropdown-item>
+                                 <el-dropdown-item >
+                                    <div @click="handleEdit(scope.$index,scope.row)"> <i class="fa fa-lock"></i> 重置密码</div>
+                                </el-dropdown-item>
+                                 <el-dropdown-item >
+                                    <div @click="handleEdit(scope.$index,scope.row)"> <i class="fa fa-fire"></i> 设置角色</div>
+                                </el-dropdown-item>
+                                 <el-dropdown-item >
+                                    <div @click="handleEdit(scope.$index,scope.row)"> <i class="fa fa-bolt"></i> 设置权限</div>
+                                </el-dropdown-item>
+                                 <el-dropdown-item >
+                                    <div @click="handleEdit(scope.$index,scope.row)"> <i class="fa fa-trash-o"></i> 删除用户</div>
+                                </el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                </template>
+            </el-table-column>
+        </el-table>
+        <el-row>
+            <el-col :span="6" :offset="17">
+                <el-pagination layout="prev, pager, next" :total="pager.count" :page-size="pager.pageSize" :current-page="pager.page">
+                </el-pagination>
+            </el-col>
+        </el-row>
+ <!-- 弹框区域-->
+<el-dialog title="添加用户" :visible.sync="addEditShow">
+  <el-form :model="user" :rules="checkUser" ref="userForm">
+    <el-form-item label="用户名" :label-width="formLabelWidth" prop="name">
+      <el-input v-model="user.name" auto-complete="off"></el-input>
+    </el-form-item>
+     <el-form-item label="真实姓名" :label-width="formLabelWidth" prop="realName">
+      <el-input v-model="user.realName" auto-complete="off"></el-input>
+    </el-form-item>
+     <el-form-item label="密码" :label-width="formLabelWidth" prop="password">
+      <el-input type="password" v-model="user.password" auto-complete="off"></el-input>
+    </el-form-item>
+     <el-form-item label="确认密码" :label-width="formLabelWidth" prop="rePassword">
+      <el-input type="password" v-model="user.rePassword" auto-complete="off"></el-input>
+    </el-form-item>
+     <el-form-item label="电话" :label-width="formLabelWidth" prop="phone">
+      <el-input v-model="user.phone" auto-complete="off"></el-input>
+    </el-form-item>
+     <el-form-item label="邮箱" :label-width="formLabelWidth" prop="email">
+      <el-input v-model="user.email" auto-complete="off"></el-input>
+    </el-form-item>
+     <el-form-item label="用户状态" :label-width="formLabelWidth">
+      <el-switch
+        v-model="user.status"
+        on-text="ACTIVIED"
+        off-text="DISABLED"
+        on-value="A"
+        off-value="D"
+        :width="100">
+        </el-switch>
+    </el-form-item>
+  </el-form>
+  <div slot="footer" class="dialog-footer">
+    <el-button @click="addEditShow = false">取 消</el-button>
+    <el-button type="primary" @click="saveOrUpdateUser('userForm')">确 定</el-button>
+  </div>
+</el-dialog>
+
+    </div>
+</template>
+
+<script>
+    import axios from 'axios';
+    import moment from 'moment'
+    export default {
+        data() {
+            var validatePassSame = (rule, value, callback) => {
+                if(value == this.user.password){
+                    callback();
+                }else{
+                    callback(new Error("两次输入密码不一致"));
+                }
+            };
+            var validateMobile= (rule, value, callback) => {
+               if( /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/.test(value)){
+                    callback();
+               }else{
+                    callback(new Error("请输入正确的手机号码"));
+               }
+            };
+            var validateEmail = (rule, value, callback) => {
+                if( /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/.test(value)){
+                    callback();
+               }else{
+                    callback(new Error("请输入正确的邮箱地址"));
+               }
+            };
+            return {
+            searchKey: '',
+            pager: {
+                page: 1,
+                pageSize: 15,
+            },
+            addEditShow: false,
+            user: {
+                id:0,
+                name: 'test',
+                realName: '王贵源',
+                status:'A',
+                password: '123456',
+                rePassword: '123456',
+                phone: '18996359755',
+                email: 'kerbores@gmail.com'
+            },
+            checkUser:{
+                name: [
+                    { required: true, message: '请输入用户名', trigger: 'blur' }
+                ],
+                realName:[
+                    { required: true, message: '请输入真实姓名', trigger: 'blur' }
+                ],
+                password:[
+                     { required: true, message: '请输入密码', trigger: 'blur' },
+                     { min: 8 , max:16, message: '请输入8到16位密码', trigger: 'blur' }
+                ],
+                rePassword:[
+                     { required: true, message: '请输入密码', trigger: 'blur' },
+                     { min: 8 , max:16, message: '请输入8到16位密码', trigger: 'blur' },
+                     { validator:validatePassSame, trigger: 'blur' }
+                ],
+                phone:[
+                     { required: true, message: '请输入手机号', trigger: 'blur' },
+                     { validator:validateMobile, trigger: 'blur' }
+                ],
+                email:[
+                     { required: true, message: '请输入电子邮箱', trigger: 'blur' },
+                     { validator:validateEmail, trigger: 'blur' }
+                ]
+            },
+            formLabelWidth: '120px'
+            }
+        },
+        watch: {},
+        methods: {
+            saveOrUpdateUser(formName){
+                this.$refs[formName].validate(valid=>{
+                    if (valid) {
+                        let url = this.user.id ? '/user/update' : '/user/save'
+                         console.log(url);
+                         this.postBody(url,this.user,result=>{
+                             location.reload();
+                         })
+                    } else {
+                        return false;
+                    }
+                })
+            },
+            formatter(row, column) {
+                return moment(row.createTime, "YYYY-MM-DD hh:mm:ss").format('YYYY年MM月DD日');
+            },
+            handleEdit(index, row) {
+                this.$message('编辑第' + (index + 1) + '行');
+            },
+            loadData() {
+                this.get('/user/list?page=' + this.pager.page, result => {
+                    this.pager = result.data.pager;
+                })
+            }
+        },
+        mounted: function() {
+            this.loadData();
+        }
+    }
+</script>
+<style>
+    .el-row {
+        margin-bottom: 20px;
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+    .el-col {
+        border-radius: 4px;
+    }
+    .bg-purple-dark {
+        background: #99a9bf;
+    }
+    .bg-purple {
+        background: #d3dce6;
+    }
+    .bg-purple-light {
+        background: #e5e9f2;
+    }
+    .grid-content {
+        border-radius: 4px;
+        min-height: 36px;
+    }
+    .row-bg {
+        padding: 10px 0;
+        background-color: #f9fafc;
+    }
+</style>

@@ -10,7 +10,7 @@
             </el-menu-item>
             <el-submenu index="2">
                 <template slot="title"><i class="el-icon- fa fa-users"></i> 访问控制</template>
-                <el-menu-item index="basetable"><i class="fa fa-user"></i> 用户管理</el-menu-item>
+                <el-menu-item index="/user"><i class="fa fa-user"></i> 用户管理</el-menu-item>
                 <el-menu-item index="vuetable"><i class="fa fa-lock"></i> 角色管理</el-menu-item>
                 <el-menu-item index="vuetable"><i class="fa fa-eye"></i> 权限管理</el-menu-item>
             </el-submenu>
