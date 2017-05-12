@@ -10,6 +10,10 @@ import axios from 'axios';
 global.baseUrl = process.env.NODE_ENV == "development" ? 'Hammer-rest' : '';
 
 Vue.prototype.requestFail = function(error, message) {
+    if (error.response && error.response.status == 403) {
+        router.push('/login');
+        return;
+    }
     if (error.response) {
         console.log(error.response.data);
         console.log(error.response.status);
