@@ -57,6 +57,17 @@ public class UserModule extends AbstractBaseModule {
 	}
 
 	@At
+	@GET
+	public Result search(@Param("key") String key, @Param(value = "page", df = "1") int page) {
+		page = _fixPage(page);
+		key = _fixSearchKey(key);
+		Pager<User> pager = userService.searchByKeyAndPage(key, page, "name", "nickName", "realName");
+		pager.setUrl(_base() + "/user/search");
+		pager.addParas("key", key);
+		return Result.success().addData("pager", pager);
+	}
+
+	@At
 	@POST
 	@AdaptBy(type = JsonAdaptor.class)
 	public Result save(User user) {

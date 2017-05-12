@@ -12,9 +12,9 @@
         </div>
         <el-row>
             <el-col :span="6">
-                <el-input placeholder="请输入内容" v-model="searchKey" icon="search">
+                <el-input placeholder="请输入内容" v-model="pager.paras.key" icon="search">
                     <div slot="append">
-                        <el-button type="primary" icon="search">GO</el-button>
+                        <el-button type="primary" icon="search" @click="doSearch">GO</el-button>
                     </div>
                 </el-input>
             </el-col>
@@ -71,7 +71,7 @@
         </el-table>
         <el-row>
             <el-col :span="6" :offset="17">
-                <el-pagination layout="prev, pager, next" :total="pager.count" :page-size="pager.pageSize" :current-page="pager.page">
+                <el-pagination layout="prev, pager, next" :total="pager.count" :page-size="pager.pageSize" :current-page="pager.page" v-show="pager.count != 0">
                 </el-pagination>
             </el-col>
         </el-row>
@@ -141,6 +141,9 @@ export default {
             pager: {
                 page: 1,
                 pageSize: 15,
+                paras:{
+                    key:'1'
+                }
             },
             addEditShow: false,
             user: {
@@ -183,6 +186,11 @@ export default {
     },
     watch: {},
     methods: {
+        doSearch(){
+            this.get('/user/search?page=' + this.pager.page + '&key=' + this.pager.paras.key, result => {
+                this.pager = result.data.pager;
+            })
+        },
         saveOrUpdateUser(formName) {
             this.$refs[formName].validate(valid => {
                 if (valid) {
@@ -229,6 +237,7 @@ export default {
         loadData() {
             this.get('/user/list?page=' + this.pager.page, result => {
                 this.pager = result.data.pager;
+                this.pager.paras={key:''}
             })
         }
     },
