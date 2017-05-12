@@ -61,7 +61,7 @@
                                     <i class="fa fa-bolt"></i> 设置权限</div>
                             </el-dropdown-item>
                             <el-dropdown-item>
-                                <div @click="handleEdit(scope.$index,scope.row)">
+                                <div @click="handleDelete(scope.$index,scope.row)">
                                     <i class="fa fa-trash-o"></i> 删除用户</div>
                             </el-dropdown-item>
                         </el-dropdown-menu>
@@ -102,7 +102,7 @@
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="addEditShow = false ; user = {}">取 消</el-button>
+                <el-button @click="addEditShow = false ; user = {status:'A'}">取 消</el-button>
                 <el-button type="primary" @click="saveOrUpdateUser('userForm')">确 定</el-button>
             </div>
         </el-dialog>
@@ -206,6 +206,25 @@ export default {
                 this.user.rePassword = '00000000';
                 this.addEditShow = true;
             })
+        },
+        handleDelete(index, row) {
+            let id = this.pager.entities[index].id;
+            this.$confirm('确认删除用户?', '删除确认', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.get('/user/delete/' + id, result => {
+                    this.$message({
+                        type: 'success',
+                        message: '删除成功!'
+                    });
+                    window.setTimeout(()=>{
+                        location.reload();
+                    },2000)
+                })
+            }).catch(() => {
+            });
         },
         loadData() {
             this.get('/user/list?page=' + this.pager.page, result => {

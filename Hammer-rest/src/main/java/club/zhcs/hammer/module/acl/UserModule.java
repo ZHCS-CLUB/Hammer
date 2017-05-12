@@ -70,6 +70,12 @@ public class UserModule extends AbstractBaseModule {
 		return Result.success().addData("user", userService.fetch(id));
 	}
 
+	@At("/delete/?")
+	@GET
+	public Result delete(long id) {
+		return userService.delete(id) == 1 ? Result.success() : Result.fail("删除用户失败!");
+	}
+
 	@At
 	@POST
 	@AdaptBy(type = JsonAdaptor.class)
