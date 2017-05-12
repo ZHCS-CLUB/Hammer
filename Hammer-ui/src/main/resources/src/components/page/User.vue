@@ -71,7 +71,7 @@
         </el-table>
         <el-row>
             <el-col :span="6" :offset="17">
-                <el-pagination layout="prev, pager, next" :total="pager.count" :page-size="pager.pageSize" :current-page="pager.page" v-show="pager.count != 0">
+                <el-pagination layout="prev, pager, next" :total="pager.count" :page-size="pager.pageSize" :current-page.sync="pager.page" v-show="pager.count != 0"  @current-change="changePage">
                 </el-pagination>
             </el-col>
         </el-row>
@@ -186,6 +186,13 @@ export default {
     },
     watch: {},
     methods: {
+        changePage(){
+            if(this.pager.paras.key){
+                this.doSearch();
+            }else{
+                this.loadData();
+            }
+        },
         doSearch(){
             this.get('/user/search?page=' + this.pager.page + '&key=' + this.pager.paras.key, result => {
                 this.pager = result.data.pager;
