@@ -14,7 +14,7 @@
             <el-col :span="6">
                 <el-input placeholder="请输入内容" v-model="pager.paras.key" icon="search">
                     <div slot="append">
-                        <el-button type="primary" icon="search" @click="doSearch">GO</el-button>
+                        <el-button type="primary" icon="search" @click=" pager.page = 1 ;doSearch()">GO</el-button>
                     </div>
                 </el-input>
             </el-col>
