@@ -67,7 +67,7 @@
             </el-col>
         </el-row>
  <!-- 弹框区域-->
-<el-dialog title="添加用户" :visible.sync="addEditShow">
+<el-dialog :title="user.id == 0 ? '添加用户' : '编辑用户' " :visible.sync="addEditShow">
   <el-form :model="user" :rules="checkUser" ref="userForm">
     <el-form-item label="用户名" :label-width="formLabelWidth" prop="name">
       <el-input v-model="user.name" auto-complete="off"></el-input>
@@ -75,10 +75,10 @@
      <el-form-item label="真实姓名" :label-width="formLabelWidth" prop="realName">
       <el-input v-model="user.realName" auto-complete="off"></el-input>
     </el-form-item>
-     <el-form-item label="密码" :label-width="formLabelWidth" prop="password">
+     <el-form-item label="密码" :label-width="formLabelWidth" prop="password" v-show="user.password != '00000000'">
       <el-input type="password" v-model="user.password" auto-complete="off"></el-input>
     </el-form-item>
-     <el-form-item label="确认密码" :label-width="formLabelWidth" prop="rePassword">
+     <el-form-item label="确认密码" :label-width="formLabelWidth" prop="rePassword" v-show="user.rePassword != '00000000'">
       <el-input type="password" v-model="user.rePassword" auto-complete="off"></el-input>
     </el-form-item>
      <el-form-item label="电话" :label-width="formLabelWidth" prop="phone">
@@ -142,13 +142,13 @@
             addEditShow: false,
             user: {
                 id:0,
-                name: 'test',
-                realName: '王贵源',
+                name: '',
+                realName: '',
                 status:'A',
-                password: '123456',
-                rePassword: '123456',
-                phone: '18996359755',
-                email: 'kerbores@gmail.com'
+                password: '',
+                rePassword: '',
+                phone: '',
+                email: ''
             },
             checkUser:{
                 name: [
@@ -184,7 +184,6 @@
                 this.$refs[formName].validate(valid=>{
                     if (valid) {
                         let url = this.user.id ? '/user/update' : '/user/save'
-                         console.log(url);
                          this.postBody(url,this.user,result=>{
                              location.reload();
                          })
@@ -197,7 +196,13 @@
                 return moment(row.createTime, "YYYY-MM-DD hh:mm:ss").format('YYYY年MM月DD日');
             },
             handleEdit(index, row) {
-                this.$message('编辑第' + (index + 1) + '行');
+                let id = this.pager.entities[index].id;
+                this.get('/user/'+id,result=>{
+                    this.user = result.data.user;
+                    this.user.password = '00000000';
+                    this.user.rePassword = '00000000';
+                    this.addEditShow = true;
+                })
             },
             loadData() {
                 this.get('/user/list?page=' + this.pager.page, result => {

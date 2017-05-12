@@ -75,7 +75,7 @@ public class UserModule extends AbstractBaseModule {
 	@AdaptBy(type = JsonAdaptor.class)
 	public Result update(User user) {
 		user.setPassword(null);// 不更新密码
-		return userService.updateIgnoreNull(user) == 1 ? Result.fail("更新用户失败!") : Result.success().addData("user", user);
+		return userService.updateIgnoreNull(user) != 1 ? Result.fail("更新用户失败!") : Result.success().addData("user", user);
 	}
 
 	/**
