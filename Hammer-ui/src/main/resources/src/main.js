@@ -15,9 +15,6 @@ Vue.prototype.requestFail = function(error, message) {
         return;
     }
     if (error.response) {
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
         message({
             showClose: true,
             message: '请求错误,状态码: ' + error.response.status,

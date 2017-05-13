@@ -81,8 +81,8 @@ public class HammerSetup implements Setup {
 			}
 		} catch (Exception e) {
 		}
-		NutShiro.DefaultLoginURL = "403";
-		NutShiro.DefaultNoAuthURL = "403";
+		NutShiro.DefaultLoginURL = "/403";
+		NutShiro.DefaultNoAuthURL = "/403";
 
 		if (!Charset.defaultCharset().name().equalsIgnoreCase(Encoding.UTF8)) {
 			log.warn("This project must run in UTF-8, pls add -Dfile.encoding=UTF-8 to JAVA_OPTS");

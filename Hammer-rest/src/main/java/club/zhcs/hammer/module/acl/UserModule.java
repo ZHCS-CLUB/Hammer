@@ -25,8 +25,10 @@ import club.zhcs.hammer.ThunderApplication.SessionKeys;
 import club.zhcs.hammer.bean.acl.User;
 import club.zhcs.hammer.biz.acl.UserService;
 import club.zhcs.hammer.biz.shiro.ShiroUserService;
+import club.zhcs.hammer.ext.shiro.anno.ThunderRequiresRoles;
 import club.zhcs.hammer.rest.ApiRequest;
 import club.zhcs.hammer.rest.dto.acl.UserLoginDto;
+import club.zhcs.hammer.vo.InstalledRole;
 import club.zhcs.titans.nutz.captcha.JPEGView;
 import club.zhcs.titans.nutz.module.base.AbstractBaseModule;
 import club.zhcs.titans.utils.codec.DES;
@@ -49,6 +51,7 @@ public class UserModule extends AbstractBaseModule {
 
 	@At
 	@GET
+	@ThunderRequiresRoles(InstalledRole.SU)
 	public Result list(@Param(value = "page", df = "1") int page) {
 		page = _fixPage(page);
 		Pager<User> pager = userService.searchByPage(page);
