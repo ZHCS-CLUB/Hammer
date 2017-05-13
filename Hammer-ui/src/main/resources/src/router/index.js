@@ -15,9 +15,25 @@ export default new Router({
                     path: '/',
                     component: resolve => require(['../components/page/Readme.vue'], resolve)
                 },
-                 {
+                {
                     path: '/user',
                     component: resolve => require(['../components/page/User.vue'], resolve)
+                },
+                {
+                    path: '/role',
+                    component: resolve => require(['../components/page/Role.vue'], resolve)
+                },
+                {
+                    path: '/permission',
+                    component: resolve => require(['../components/page/Permission.vue'], resolve)
+                },
+                {
+                    path: '/group',
+                    component: resolve => require(['../components/page/Group.vue'], resolve)
+                },
+                {
+                    path: '/codebook',
+                    component: resolve => require(['../components/page/Codebook.vue'], resolve)
                 },
                 {
                     path: '/datasource',
