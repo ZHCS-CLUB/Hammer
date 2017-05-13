@@ -75,6 +75,14 @@ public class UserModule extends AbstractBaseModule {
 		return userService.save(user) == null ? Result.fail("保存用户失败!") : Result.success().addData("user", user);
 	}
 
+	@At
+	@POST
+	@AdaptBy(type = JsonAdaptor.class)
+	public Result resetPassword(User user) {
+		user.setPassword(new Md5Hash(user.getPassword(), user.getName(), 2).toString());
+		return userService.update(user, "password") != 1 ? Result.fail("保存用户失败!") : Result.success().addData("user", user);
+	}
+
 	@At("/?")
 	@GET
 	public Result detail(long id) {

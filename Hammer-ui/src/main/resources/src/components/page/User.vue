@@ -49,7 +49,7 @@
                                     <i class="fa fa-edit"></i> 编辑用户</div>
                             </el-dropdown-item>
                             <el-dropdown-item>
-                                <div @click="handleEdit(scope.$index,scope.row)">
+                                <div @click="handleReset(scope.$index,scope.row)">
                                     <i class="fa fa-lock"></i> 重置密码</div>
                             </el-dropdown-item>
                             <el-dropdown-item>
@@ -107,6 +107,18 @@
             </div>
         </el-dialog>
     
+        <el-dialog title="重置密码" :visible.sync="resetShow" size="tiny">
+            <el-form :model="user" :rules="checkUser" ref="resetForm">
+                <el-form-item label="密码" :label-width="formLabelWidth" prop="password">
+                    <el-input type="password" v-model="user.password" auto-complete="off"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="resetShow = false">取 消</el-button>
+                <el-button type="primary" @click="resetPassword('resetForm')">确 定</el-button>
+            </div>
+        </el-dialog>
+    
     </div>
 </template>
 
@@ -146,6 +158,7 @@ export default {
                 }
             },
             addEditShow: false,
+            resetShow: false,
             user: {
                 id: 0,
                 name: '',
@@ -186,6 +199,25 @@ export default {
     },
     watch: {},
     methods: {
+        resetPassword(formName) {
+            this.$refs[formName].validate(valid => {
+                if (valid) {
+                    this.postBody('/user/resetPassword', this.user, result => {
+                        this.$message({
+                            type: 'success',
+                            message: '重置成功!'
+                        });
+                        this.resetShow = false;
+                    })
+                } else {
+                    return false;
+                }
+            })
+        },
+        handleReset(index, row) {
+            this.user.id = this.pager.entities[index].id;
+            this.resetShow = true;
+        },
         changePage() {
             if (this.pager.paras.key) {
                 this.doSearch();
