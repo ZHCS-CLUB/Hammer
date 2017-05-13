@@ -71,7 +71,7 @@
         </el-table>
         <el-row>
             <el-col :span="6" :offset="18">
-                <el-pagination style="float:right" layout="prev, pager, next" :total="pager.count" :page-size="pager.pageSize" :current-page.sync="pager.page" v-show="pager.count != 0"  @current-change="changePage">
+                <el-pagination style="float:right" layout="prev, pager, next" :total="pager.count" :page-size="pager.pageSize" :current-page.sync="pager.page" v-show="pager.count != 0" @current-change="changePage">
                 </el-pagination>
             </el-col>
         </el-row>
@@ -141,8 +141,8 @@ export default {
             pager: {
                 page: 1,
                 pageSize: 15,
-                paras:{
-                    key:'1'
+                paras: {
+                    key: '1'
                 }
             },
             addEditShow: false,
@@ -186,14 +186,14 @@ export default {
     },
     watch: {},
     methods: {
-        changePage(){
-            if(this.pager.paras.key){
+        changePage() {
+            if (this.pager.paras.key) {
                 this.doSearch();
-            }else{
+            } else {
                 this.loadData();
             }
         },
-        doSearch(){
+        doSearch() {
             this.get('/user/search?page=' + this.pager.page + '&key=' + this.pager.paras.key, result => {
                 this.pager = result.data.pager;
             })
@@ -203,7 +203,12 @@ export default {
                 if (valid) {
                     let url = this.user.id ? '/user/update' : '/user/save'
                     this.postBody(url, this.user, result => {
-                        location.reload();
+                        if (this.pager.paras.key) {
+                            this.doSearch();
+                        } else {
+                            this.loadData();
+                        }
+                        this.addEditShow = false;
                     })
                 } else {
                     return false;
@@ -234,9 +239,13 @@ export default {
                         type: 'success',
                         message: '删除成功!'
                     });
-                    window.setTimeout(()=>{
-                        location.reload();
-                    },2000)
+                    window.setTimeout(() => {
+                        if (this.pager.paras.key) {
+                            this.doSearch();
+                        } else {
+                            this.loadData();
+                        }
+                    }, 2000)
                 })
             }).catch(() => {
             });
@@ -244,7 +253,7 @@ export default {
         loadData() {
             this.get('/user/list?page=' + this.pager.page, result => {
                 this.pager = result.data.pager;
-                this.pager.paras={key:''}
+                this.pager.paras = { key: '' }
             })
         }
     },

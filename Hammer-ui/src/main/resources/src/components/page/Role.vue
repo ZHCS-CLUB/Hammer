@@ -25,15 +25,13 @@
         <el-table :data="pager.entities" border style="width: 100%">
             <el-table-column prop="id" label="ID" sortable>
             </el-table-column>
-            <el-table-column prop="name" label="用户名">
+            <el-table-column prop="name" label="名称">
             </el-table-column>
-            <el-table-column prop="realName" label="姓名">
-            </el-table-column>
-            <el-table-column prop="createTime" label="创建时间" :formatter="formatter">
+            <el-table-column prop="description" label="描述">
             </el-table-column>
             <el-table-column prop="status" label="状态">
                 <template scope="scope">
-                    <el-tag :type="scope.row.status === 'A' ? 'success' : 'danger'" close-transition>{{scope.row.status == 'A' ? 'ACTIVIED' : 'DISABLED'}}</el-tag>
+                    <el-tag :type="scope.row.installed  ? 'success' : 'danger'" close-transition>{{scope.row.installed ? '内置' : '自由'}}</el-tag>
                 </template>
             </el-table-column>
             <el-table-column label="操作">
@@ -242,7 +240,7 @@ export default {
             });
         },
         loadData() {
-            this.get('/user/list?page=' + this.pager.page, result => {
+            this.get('/role/list?page=' + this.pager.page, result => {
                 this.pager = result.data.pager;
                 this.pager.paras={key:''}
             })
