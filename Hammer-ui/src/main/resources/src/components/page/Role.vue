@@ -5,9 +5,9 @@
                 <el-breadcrumb-item>
                     <i class="fa fa-home"></i> 首页</el-breadcrumb-item>
                 <el-breadcrumb-item>
-                    <i class="fa fa-user"></i> 用户</el-breadcrumb-item>
+                    <i class="fa fa-lock"></i> 角色</el-breadcrumb-item>
                 <el-breadcrumb-item>
-                    <i class="fa fa-list"></i> 用户列表</el-breadcrumb-item>
+                    <i class="fa fa-list"></i> 角色列表</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <el-row>

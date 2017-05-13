@@ -5,9 +5,9 @@
                 <el-breadcrumb-item>
                     <i class="fa fa-home"></i> 首页</el-breadcrumb-item>
                 <el-breadcrumb-item>
-                    <i class="fa fa-user"></i> 用户</el-breadcrumb-item>
+                    <i class="fa fa-eys"></i> 权限</el-breadcrumb-item>
                 <el-breadcrumb-item>
-                    <i class="fa fa-list"></i> 用户列表</el-breadcrumb-item>
+                    <i class="fa fa-list"></i> 权限列表</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <el-row>
@@ -19,21 +19,19 @@
                 </el-input>
             </el-col>
             <el-col :span="6" :offset="12">
-                <el-button type="primary" icon="plus" @click="addEditShow = true">添加用户</el-button>
+                <el-button type="primary" icon="plus" @click="addEditShow = true">添加权限</el-button>
             </el-col>
         </el-row>
         <el-table :data="pager.entities" border style="width: 100%">
             <el-table-column prop="id" label="ID" sortable>
             </el-table-column>
-            <el-table-column prop="name" label="用户名">
+            <el-table-column prop="name" label="名称">
             </el-table-column>
-            <el-table-column prop="realName" label="姓名">
-            </el-table-column>
-            <el-table-column prop="createTime" label="创建时间" :formatter="formatter">
+            <el-table-column prop="description" label="描述">
             </el-table-column>
             <el-table-column prop="status" label="状态">
                 <template scope="scope">
-                    <el-tag :type="scope.row.status === 'A' ? 'success' : 'danger'" close-transition>{{scope.row.status == 'A' ? 'ACTIVIED' : 'DISABLED'}}</el-tag>
+                    <el-tag :type="scope.row.installed  ? 'success' : 'danger'" close-transition>{{scope.row.installed ? '内置' : '自由'}}</el-tag>
                 </template>
             </el-table-column>
             <el-table-column label="操作">
@@ -46,15 +44,7 @@
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item>
                                 <div @click="handleEdit(scope.$index,scope.row)">
-                                    <i class="fa fa-edit"></i> 编辑用户</div>
-                            </el-dropdown-item>
-                            <el-dropdown-item>
-                                <div @click="handleEdit(scope.$index,scope.row)">
-                                    <i class="fa fa-lock"></i> 重置密码</div>
-                            </el-dropdown-item>
-                            <el-dropdown-item>
-                                <div @click="handleEdit(scope.$index,scope.row)">
-                                    <i class="fa fa-fire"></i> 设置角色</div>
+                                    <i class="fa fa-edit"></i> 编辑权限</div>
                             </el-dropdown-item>
                             <el-dropdown-item>
                                 <div @click="handleEdit(scope.$index,scope.row)">
@@ -62,7 +52,7 @@
                             </el-dropdown-item>
                             <el-dropdown-item>
                                 <div @click="handleDelete(scope.$index,scope.row)">
-                                    <i class="fa fa-trash-o"></i> 删除用户</div>
+                                    <i class="fa fa-trash-o"></i> 删除权限</div>
                             </el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
@@ -76,34 +66,18 @@
             </el-col>
         </el-row>
         <!-- 弹框区域-->
-        <el-dialog :title="user.id == 0 ? '添加用户' : '编辑用户' " :visible.sync="addEditShow">
-            <el-form :model="user" :rules="checkUser" ref="userForm">
-                <el-form-item label="用户名" :label-width="formLabelWidth" prop="name">
-                    <el-input v-model="user.name" auto-complete="off"></el-input>
+        <el-dialog :title="permission.id == 0 ? '添加权限' : '编辑权限' " :visible.sync="addEditShow">
+            <el-form :model="permission" :rules="checkPermission" ref="permissionForm">
+                <el-form-item label="名称" :label-width="formLabelWidth" prop="name">
+                    <el-input v-model="permission.name" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="真实姓名" :label-width="formLabelWidth" prop="realName">
-                    <el-input v-model="user.realName" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="密码" :label-width="formLabelWidth" prop="password" v-show="user.password != '00000000'">
-                    <el-input type="password" v-model="user.password" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="确认密码" :label-width="formLabelWidth" prop="rePassword" v-show="user.rePassword != '00000000'">
-                    <el-input type="password" v-model="user.rePassword" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="电话" :label-width="formLabelWidth" prop="phone">
-                    <el-input v-model="user.phone" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="邮箱" :label-width="formLabelWidth" prop="email">
-                    <el-input v-model="user.email" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="用户状态" :label-width="formLabelWidth">
-                    <el-switch v-model="user.status" on-text="ACTIVIED" off-text="DISABLED" on-value="A" off-value="D" :width="100">
-                    </el-switch>
+                <el-form-item label="描述" :label-width="formLabelWidth" prop="description">
+                    <el-input v-model="permission.description" auto-complete="off"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="addEditShow = false ; user = {status:'A'}">取 消</el-button>
-                <el-button type="primary" @click="saveOrUpdateUser('userForm')">确 定</el-button>
+                <el-button @click="addEditShow = false ; user = {installed:false}">取 消</el-button>
+                <el-button type="primary" @click="saveOrUpdatePermission('permissionForm')">确 定</el-button>
             </div>
         </el-dialog>
     
@@ -115,27 +89,6 @@ import axios from 'axios';
 import moment from 'moment'
 export default {
     data() {
-        var validatePassSame = (rule, value, callback) => {
-            if (value == this.user.password) {
-                callback();
-            } else {
-                callback(new Error("两次输入密码不一致"));
-            }
-        };
-        var validateMobile = (rule, value, callback) => {
-            if (/^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/.test(value)) {
-                callback();
-            } else {
-                callback(new Error("请输入正确的手机号码"));
-            }
-        };
-        var validateEmail = (rule, value, callback) => {
-            if (/\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/.test(value)) {
-                callback();
-            } else {
-                callback(new Error("请输入正确的邮箱地址"));
-            }
-        };
         return {
             searchKey: '',
             pager: {
@@ -146,39 +99,18 @@ export default {
                 }
             },
             addEditShow: false,
-            user: {
+            permission: {
                 id: 0,
                 name: '',
-                realName: '',
-                status: 'A',
-                password: '',
-                rePassword: '',
-                phone: '',
-                email: ''
+                description: '',
+                installed: false
             },
-            checkUser: {
+            checkPermission: {
                 name: [
-                    { required: true, message: '请输入用户名', trigger: 'blur' }
+                    { required: true, message: '请输入权限名称', trigger: 'blur' }
                 ],
-                realName: [
-                    { required: true, message: '请输入真实姓名', trigger: 'blur' }
-                ],
-                password: [
-                    { required: true, message: '请输入密码', trigger: 'blur' },
-                    { min: 8, max: 16, message: '请输入8到16位密码', trigger: 'blur' }
-                ],
-                rePassword: [
-                    { required: true, message: '请输入密码', trigger: 'blur' },
-                    { min: 8, max: 16, message: '请输入8到16位密码', trigger: 'blur' },
-                    { validator: validatePassSame, trigger: 'blur' }
-                ],
-                phone: [
-                    { required: true, message: '请输入手机号', trigger: 'blur' },
-                    { validator: validateMobile, trigger: 'blur' }
-                ],
-                email: [
-                    { required: true, message: '请输入电子邮箱', trigger: 'blur' },
-                    { validator: validateEmail, trigger: 'blur' }
+                description: [
+                    { required: true, message: '请输入权限描述', trigger: 'blur' }
                 ]
             },
             formLabelWidth: '120px'
@@ -194,55 +126,51 @@ export default {
             }
         },
         doSearch(){
-            this.get('/user/search?page=' + this.pager.page + '&key=' + this.pager.paras.key, result => {
+            this.get('/permission/search?page=' + this.pager.page + '&key=' + this.pager.paras.key, result => {
                 this.pager = result.data.pager;
             })
         },
-        saveOrUpdateUser(formName) {
+        saveOrUpdatePermission(formName) {
             this.$refs[formName].validate(valid => {
                 if (valid) {
-                    let url = this.user.id ? '/user/update' : '/user/save'
-                    this.postBody(url, this.user, result => {
-                        location.reload();
+                    let url = this.permission.id ? '/permission/update' : '/permission/save'
+                    this.postBody(url, this.permission, result => {
+                        this.changePage();
+                        this.addEditShow = false;
                     })
                 } else {
                     return false;
                 }
             })
         },
-        formatter(row, column) {
-            return moment(row.createTime, "YYYY-MM-DD hh:mm:ss").format('YYYY年MM月DD日');
-        },
         handleEdit(index, row) {
             let id = this.pager.entities[index].id;
-            this.get('/user/' + id, result => {
-                this.user = result.data.user;
-                this.user.password = '00000000';
-                this.user.rePassword = '00000000';
+            this.get('/permission/' + id, result => {
+                this.permission = result.data.permission;
                 this.addEditShow = true;
             })
         },
         handleDelete(index, row) {
             let id = this.pager.entities[index].id;
-            this.$confirm('确认删除用户?', '删除确认', {
+            this.$confirm('确认删除权限?', '删除确认', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                this.get('/user/delete/' + id, result => {
+                this.get('/permission/delete/' + id, result => {
                     this.$message({
                         type: 'success',
                         message: '删除成功!'
                     });
                     window.setTimeout(()=>{
-                        location.reload();
+                        this.changePage();
                     },2000)
                 })
             }).catch(() => {
             });
         },
         loadData() {
-            this.get('/user/list?page=' + this.pager.page, result => {
+            this.get('/permission/list?page=' + this.pager.page, result => {
                 this.pager = result.data.pager;
                 this.pager.paras={key:''}
             })
