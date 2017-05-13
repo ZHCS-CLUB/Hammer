@@ -53,10 +53,7 @@ public class UserModule extends AbstractBaseModule {
 	@GET
 	@ThunderRequiresRoles(InstalledRole.SU)
 	public Result list(@Param(value = "page", df = "1") int page) {
-		page = _fixPage(page);
-		Pager<User> pager = userService.searchByPage(page);
-		pager.setUrl(_base() + "/user/list");
-		return Result.success().addData("pager", pager);
+		return Result.success().addData("pager", userService.searchByPage(_fixPage(page)));
 	}
 
 	@At

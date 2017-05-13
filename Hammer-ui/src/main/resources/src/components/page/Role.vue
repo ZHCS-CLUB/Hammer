@@ -19,7 +19,7 @@
                 </el-input>
             </el-col>
             <el-col :span="6" :offset="12">
-                <el-button type="primary" icon="plus" @click="addEditShow = true">添加用户</el-button>
+                <el-button type="primary" icon="plus" @click="addEditShow = true">添加角色</el-button>
             </el-col>
         </el-row>
         <el-table :data="pager.entities" border style="width: 100%">
@@ -44,15 +44,7 @@
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item>
                                 <div @click="handleEdit(scope.$index,scope.row)">
-                                    <i class="fa fa-edit"></i> 编辑用户</div>
-                            </el-dropdown-item>
-                            <el-dropdown-item>
-                                <div @click="handleEdit(scope.$index,scope.row)">
-                                    <i class="fa fa-lock"></i> 重置密码</div>
-                            </el-dropdown-item>
-                            <el-dropdown-item>
-                                <div @click="handleEdit(scope.$index,scope.row)">
-                                    <i class="fa fa-fire"></i> 设置角色</div>
+                                    <i class="fa fa-edit"></i> 编辑角色</div>
                             </el-dropdown-item>
                             <el-dropdown-item>
                                 <div @click="handleEdit(scope.$index,scope.row)">
@@ -60,7 +52,7 @@
                             </el-dropdown-item>
                             <el-dropdown-item>
                                 <div @click="handleDelete(scope.$index,scope.row)">
-                                    <i class="fa fa-trash-o"></i> 删除用户</div>
+                                    <i class="fa fa-trash-o"></i> 删除角色</div>
                             </el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
@@ -74,34 +66,18 @@
             </el-col>
         </el-row>
         <!-- 弹框区域-->
-        <el-dialog :title="user.id == 0 ? '添加用户' : '编辑用户' " :visible.sync="addEditShow">
-            <el-form :model="user" :rules="checkUser" ref="userForm">
-                <el-form-item label="用户名" :label-width="formLabelWidth" prop="name">
-                    <el-input v-model="user.name" auto-complete="off"></el-input>
+        <el-dialog :title="role.id == 0 ? '添加角色' : '编辑角色' " :visible.sync="addEditShow">
+            <el-form :model="role" :rules="checkRole" ref="roleForm">
+                <el-form-item label="名称" :label-width="formLabelWidth" prop="name">
+                    <el-input v-model="role.name" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="真实姓名" :label-width="formLabelWidth" prop="realName">
-                    <el-input v-model="user.realName" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="密码" :label-width="formLabelWidth" prop="password" v-show="user.password != '00000000'">
-                    <el-input type="password" v-model="user.password" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="确认密码" :label-width="formLabelWidth" prop="rePassword" v-show="user.rePassword != '00000000'">
-                    <el-input type="password" v-model="user.rePassword" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="电话" :label-width="formLabelWidth" prop="phone">
-                    <el-input v-model="user.phone" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="邮箱" :label-width="formLabelWidth" prop="email">
-                    <el-input v-model="user.email" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="用户状态" :label-width="formLabelWidth">
-                    <el-switch v-model="user.status" on-text="ACTIVIED" off-text="DISABLED" on-value="A" off-value="D" :width="100">
-                    </el-switch>
+                <el-form-item label="描述" :label-width="formLabelWidth" prop="description">
+                    <el-input v-model="role.description" auto-complete="off"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="addEditShow = false ; user = {status:'A'}">取 消</el-button>
-                <el-button type="primary" @click="saveOrUpdateUser('userForm')">确 定</el-button>
+                <el-button @click="addEditShow = false ; user = {installed:false}">取 消</el-button>
+                <el-button type="primary" @click="saveOrUpdateRole('roleForm')">确 定</el-button>
             </div>
         </el-dialog>
     
@@ -113,27 +89,6 @@ import axios from 'axios';
 import moment from 'moment'
 export default {
     data() {
-        var validatePassSame = (rule, value, callback) => {
-            if (value == this.user.password) {
-                callback();
-            } else {
-                callback(new Error("两次输入密码不一致"));
-            }
-        };
-        var validateMobile = (rule, value, callback) => {
-            if (/^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/.test(value)) {
-                callback();
-            } else {
-                callback(new Error("请输入正确的手机号码"));
-            }
-        };
-        var validateEmail = (rule, value, callback) => {
-            if (/\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/.test(value)) {
-                callback();
-            } else {
-                callback(new Error("请输入正确的邮箱地址"));
-            }
-        };
         return {
             searchKey: '',
             pager: {
@@ -144,39 +99,18 @@ export default {
                 }
             },
             addEditShow: false,
-            user: {
+            role: {
                 id: 0,
                 name: '',
-                realName: '',
-                status: 'A',
-                password: '',
-                rePassword: '',
-                phone: '',
-                email: ''
+                description: '',
+                installed: false
             },
-            checkUser: {
+            checkRole: {
                 name: [
-                    { required: true, message: '请输入用户名', trigger: 'blur' }
+                    { required: true, message: '请输入角色名称', trigger: 'blur' }
                 ],
-                realName: [
-                    { required: true, message: '请输入真实姓名', trigger: 'blur' }
-                ],
-                password: [
-                    { required: true, message: '请输入密码', trigger: 'blur' },
-                    { min: 8, max: 16, message: '请输入8到16位密码', trigger: 'blur' }
-                ],
-                rePassword: [
-                    { required: true, message: '请输入密码', trigger: 'blur' },
-                    { min: 8, max: 16, message: '请输入8到16位密码', trigger: 'blur' },
-                    { validator: validatePassSame, trigger: 'blur' }
-                ],
-                phone: [
-                    { required: true, message: '请输入手机号', trigger: 'blur' },
-                    { validator: validateMobile, trigger: 'blur' }
-                ],
-                email: [
-                    { required: true, message: '请输入电子邮箱', trigger: 'blur' },
-                    { validator: validateEmail, trigger: 'blur' }
+                description: [
+                    { required: true, message: '请输入角色描述', trigger: 'blur' }
                 ]
             },
             formLabelWidth: '120px'
@@ -192,48 +126,44 @@ export default {
             }
         },
         doSearch(){
-            this.get('/user/search?page=' + this.pager.page + '&key=' + this.pager.paras.key, result => {
+            this.get('/role/search?page=' + this.pager.page + '&key=' + this.pager.paras.key, result => {
                 this.pager = result.data.pager;
             })
         },
-        saveOrUpdateUser(formName) {
+        saveOrUpdateRole(formName) {
             this.$refs[formName].validate(valid => {
                 if (valid) {
-                    let url = this.user.id ? '/user/update' : '/user/save'
-                    this.postBody(url, this.user, result => {
-                        location.reload();
+                    let url = this.role.id ? '/role/update' : '/role/save'
+                    this.postBody(url, this.role, result => {
+                        this.changePage();
+                        this.addEditShow = false;
                     })
                 } else {
                     return false;
                 }
             })
         },
-        formatter(row, column) {
-            return moment(row.createTime, "YYYY-MM-DD hh:mm:ss").format('YYYY年MM月DD日');
-        },
         handleEdit(index, row) {
             let id = this.pager.entities[index].id;
-            this.get('/user/' + id, result => {
-                this.user = result.data.user;
-                this.user.password = '00000000';
-                this.user.rePassword = '00000000';
+            this.get('/role/' + id, result => {
+                this.role = result.data.role;
                 this.addEditShow = true;
             })
         },
         handleDelete(index, row) {
             let id = this.pager.entities[index].id;
-            this.$confirm('确认删除用户?', '删除确认', {
+            this.$confirm('确认删除角色?', '删除确认', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                this.get('/user/delete/' + id, result => {
+                this.get('/role/delete/' + id, result => {
                     this.$message({
                         type: 'success',
                         message: '删除成功!'
                     });
                     window.setTimeout(()=>{
-                        location.reload();
+                        this.changePage();
                     },2000)
                 })
             }).catch(() => {
