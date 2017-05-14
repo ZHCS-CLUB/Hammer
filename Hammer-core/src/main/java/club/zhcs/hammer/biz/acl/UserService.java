@@ -38,7 +38,6 @@ public class UserService extends BaseService<User> {
 	@Inject
 	UserRoleService userRoleService;
 
-
 	/**
 	 * @param id
 	 * @param old
@@ -74,12 +73,6 @@ public class UserService extends BaseService<User> {
 	public List<Record> findPermissionsWithUserPowerdInfoByUserId(int id) {
 		Sql sql = dao().sqls().create("find.permissions.with.user.powered.info.by.user.id");
 		sql.params().set("id", id);
-		return search(sql);
-	}
-
-	public List<Record> findRegionWithUserBelongInfoByUserId(int id) {
-		Sql sql = dao().sqls().create("find.user.region.with.belong.info.by.user.id");
-		sql.params().set("id", id).set("groupName", "region");// XXX hardcode
 		return search(sql);
 	}
 

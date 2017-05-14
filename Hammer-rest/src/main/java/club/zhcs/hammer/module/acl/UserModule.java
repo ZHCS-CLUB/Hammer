@@ -95,6 +95,55 @@ public class UserModule extends AbstractBaseModule {
 		return userService.delete(id) == 1 ? Result.success() : Result.fail("删除用户失败!");
 	}
 
+	@At("/role/?")
+	@GET
+	public Result roleInfo(int id) {
+		return Result.success().addData("infos", userService.findRolesWithUserPowerdInfoByUserId(id));
+	}
+
+	@At("/permission/?")
+	@GET
+	public Result permissionInfo(int id) {
+		return Result.success().addData("infos", userService.findPermissionsWithUserPowerdInfoByUserId(id));
+	}
+
+	public static class GrantDTO {
+		private int userId;
+
+		private int[] grantIds;
+
+		public int getUserId() {
+			return userId;
+		}
+
+		public void setUserId(int userId) {
+			this.userId = userId;
+		}
+
+		public int[] getGrantIds() {
+			return grantIds;
+		}
+
+		public void setGrantIds(int[] grantIds) {
+			this.grantIds = grantIds;
+		}
+
+	}
+
+	@At("/grant/role")
+	@POST
+	@AdaptBy(type = JsonAdaptor.class)
+	public Result grantRole(GrantDTO dto) {
+		return userService.setRole(dto.getGrantIds(), dto.getUserId());
+	}
+
+	@At("/grant/permission")
+	@POST
+	@AdaptBy(type = JsonAdaptor.class)
+	public Result grantPermission(GrantDTO dto) {
+		return userService.setPermission(dto.getGrantIds(), dto.getUserId());
+	}
+
 	@At
 	@POST
 	@AdaptBy(type = JsonAdaptor.class)

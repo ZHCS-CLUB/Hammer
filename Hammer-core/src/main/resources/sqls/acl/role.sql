@@ -12,12 +12,14 @@ WHERE
 find.roles.with.user.powerd.info.by.user.id
 */
 SELECT
-	r.*, CASE sur.id IS NULL
+	r.id,
+	r.r_desc as description,
+ CASE sur.id IS NULL
 WHEN 1 THEN
-	''
+	FALSE
 ELSE
-	'selected'
-END AS has_role
+	TRUE
+END AS selected
 FROM
 	t_role r
 LEFT JOIN (

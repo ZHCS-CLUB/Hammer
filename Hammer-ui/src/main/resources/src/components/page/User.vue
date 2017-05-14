@@ -53,11 +53,11 @@
                                     <i class="fa fa-lock"></i> 重置密码</div>
                             </el-dropdown-item>
                             <el-dropdown-item>
-                                <div @click="handleEdit(scope.$index,scope.row)">
+                                <div @click="handleGrant(scope.$index,scope.row,'role')">
                                     <i class="fa fa-fire"></i> 设置角色</div>
                             </el-dropdown-item>
                             <el-dropdown-item>
-                                <div @click="handleEdit(scope.$index,scope.row)">
+                                <div @click="handleGrant(scope.$index,scope.row,'permission')">
                                     <i class="fa fa-bolt"></i> 设置权限</div>
                             </el-dropdown-item>
                             <el-dropdown-item>
@@ -119,6 +119,16 @@
             </div>
         </el-dialog>
     
+        <el-dialog :title="type=='role' ? '设置角色' : '设置权限'" :visible.sync="grantShow" size="tiny">
+            <template>
+                <el-transfer v-model="selected" :data="options" :titles="['待选项', '已选项']" filterable></el-transfer>
+            </template>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="grantShow = false">取 消</el-button>
+                <el-button type="primary" @click="grant">确 定</el-button>
+            </div>
+        </el-dialog>
+    
     </div>
 </template>
 
@@ -157,8 +167,12 @@ export default {
                     key: '1'
                 }
             },
+            selected: [],
+            options: [],
             addEditShow: false,
             resetShow: false,
+            grantShow: false,
+            type: 'role',
             user: {
                 id: 0,
                 name: '',
@@ -197,8 +211,33 @@ export default {
             formLabelWidth: '100px'
         }
     },
-    watch: {},
+    watch: {
+        options: function () {
+            this.selected = [];
+            this.options.forEach(item => {
+                if (item.selected) {
+                    this.selected.push(item.key)
+                }
+            })
+        }
+    },
     methods: {
+        grant() {
+            let url = '/user/grant/' + this.type;
+            let data = {
+                userId: this.user.id,
+                grantIds: this.selected
+            }
+            this.postBody(url, data, result => {
+                this.$message({
+                    type: 'success',
+                    message: '授权成功!'
+                });
+                window.setTimeout(() => {
+                    this.grantShow = false;
+                }, 2000)
+            })
+        },
         resetPassword(formName) {
             this.$refs[formName].validate(valid => {
                 if (valid) {
@@ -257,6 +296,23 @@ export default {
                 this.user.password = '00000000';
                 this.user.rePassword = '00000000';
                 this.addEditShow = true;
+            })
+        },
+        handleGrant(index, row, type) {
+            this.user.id = this.pager.entities[index].id;
+            this.type = type;
+            let url = '/user/' + type + "/" + this.pager.entities[index].id;
+            this.get(url, result => {
+                console.log(result);
+                this.options = [];
+                result.data.infos.forEach((item, index) => {
+                    this.options.push({
+                        key: item.id,
+                        label: item.description,
+                        selected: item.selected,
+                    })
+                });
+                this.grantShow = true;
             })
         },
         handleDelete(index, row) {

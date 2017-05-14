@@ -22,15 +22,17 @@ WHERE ur.u_id = @userId
 find.permissions.with.user.powered.info.by.user.id
 */
 SELECT
-	p.*, CASE sup.id IS NULL
+	p.id ,
+	p.p_desc AS description ,
+	CASE sup.id IS NULL
 WHEN 1 THEN
-	''
+	FALSE
 ELSE
-	'selected'
-END AS has_permission
+	TRUE
+END AS selected
 FROM
 	t_permission p
-LEFT JOIN (
+LEFT JOIN(
 	SELECT
 		*
 	FROM
@@ -42,15 +44,17 @@ LEFT JOIN (
 find.permissions.with.role.powered.info.by.role.id
 */
 SELECT
-	p.*, CASE srp.id IS NULL
+	p.id ,
+	p.p_desc AS description ,
+	CASE srp.id IS NULL
 WHEN 1 THEN
-	''
+	FALSE
 ELSE
-	'selected'
-END AS hasr_permission
+	TRUE
+END AS selected
 FROM
 	t_permission p
-LEFT JOIN (
+LEFT JOIN(
 	SELECT
 		*
 	FROM
