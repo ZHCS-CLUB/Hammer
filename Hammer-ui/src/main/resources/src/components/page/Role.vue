@@ -47,7 +47,7 @@
                                     <i class="fa fa-edit"></i> 编辑角色</div>
                             </el-dropdown-item>
                             <el-dropdown-item>
-                                <div @click="handleEdit(scope.$index,scope.row)">
+                                <div @click="handleGrant(scope.$index,scope.row)">
                                     <i class="fa fa-bolt"></i> 设置权限</div>
                             </el-dropdown-item>
                             <el-dropdown-item>
@@ -61,7 +61,7 @@
         </el-table>
         <el-row>
             <el-col :span="6" :offset="18">
-                <el-pagination style="float:right" layout="prev, pager, next" :total="pager.count" :page-size="pager.pageSize" :current-page.sync="pager.page" v-show="pager.count != 0"  @current-change="changePage">
+                <el-pagination style="float:right" layout="prev, pager, next" :total="pager.count" :page-size="pager.pageSize" :current-page.sync="pager.page" v-show="pager.count != 0" @current-change="changePage">
                 </el-pagination>
             </el-col>
         </el-row>
@@ -80,6 +80,16 @@
                 <el-button type="primary" @click="saveOrUpdateRole('roleForm')">确 定</el-button>
             </div>
         </el-dialog>
+
+        <el-dialog title="设置权限" :visible.sync="grantShow" size="tiny">
+            <template>
+                <el-transfer v-model="selected" :data="options" :titles="['待选项', '已选项']" filterable></el-transfer>
+            </template>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="grantShow = false">取 消</el-button>
+                <el-button type="primary" @click="grant">确 定</el-button>
+            </div>
+        </el-dialog>
     
     </div>
 </template>
@@ -94,11 +104,14 @@ export default {
             pager: {
                 page: 1,
                 pageSize: 15,
-                paras:{
-                    key:'1'
+                paras: {
+                    key: '1'
                 }
             },
+            selected: [],
+            options: [],
             addEditShow: false,
+            grantShow: false,
             role: {
                 id: 0,
                 name: '',
@@ -116,16 +129,40 @@ export default {
             formLabelWidth: '120px'
         }
     },
-    watch: {},
+    watch: {
+        options: function () {
+            this.selected = [];
+            this.options.forEach(item => {
+                if (item.selected) {
+                    this.selected.push(item.key)
+                }
+            })
+        }
+    },
     methods: {
-        changePage(){
-            if(this.pager.paras.key){
+        grant() {
+            let data = {
+                roleId: this.role.id,
+                grantIds: this.selected
+            }
+            this.postBody('/role/grant/', data, result => {
+                this.$message({
+                    type: 'success',
+                    message: '授权成功!'
+                });
+                window.setTimeout(() => {
+                    this.grantShow = false;
+                }, 2000)
+            })
+        },
+        changePage() {
+            if (this.pager.paras.key) {
                 this.doSearch();
-            }else{
+            } else {
                 this.loadData();
             }
         },
-        doSearch(){
+        doSearch() {
             this.get('/role/search?page=' + this.pager.page + '&key=' + this.pager.paras.key, result => {
                 this.pager = result.data.pager;
             })
@@ -150,6 +187,21 @@ export default {
                 this.addEditShow = true;
             })
         },
+        handleGrant(index, row) {
+            this.role.id = this.pager.entities[index].id;
+            let url = '/role/permission/' + this.pager.entities[index].id;
+            this.get(url, result => {
+                this.options = [];
+                result.data.infos.forEach((item, index) => {
+                    this.options.push({
+                        key: item.id,
+                        label: item.description,
+                        selected: item.selected,
+                    })
+                });
+                this.grantShow = true;
+            })
+        },
         handleDelete(index, row) {
             let id = this.pager.entities[index].id;
             this.$confirm('确认删除角色?', '删除确认', {
@@ -162,9 +214,9 @@ export default {
                         type: 'success',
                         message: '删除成功!'
                     });
-                    window.setTimeout(()=>{
+                    window.setTimeout(() => {
                         this.changePage();
-                    },2000)
+                    }, 2000)
                 })
             }).catch(() => {
             });
@@ -172,7 +224,7 @@ export default {
         loadData() {
             this.get('/role/list?page=' + this.pager.page, result => {
                 this.pager = result.data.pager;
-                this.pager.paras={key:''}
+                this.pager.paras = { key: '' }
             })
         }
     },

@@ -68,4 +68,40 @@ public class RoleModule extends AbstractBaseModule {
 		return roleService.updateIgnoreNull(role) != 1 ? Result.fail("更新角色失败!") : Result.success().addData("role", role);
 	}
 
+	@At("/permission/?")
+	@GET
+	public Result permissionInfo(int id) {
+		return Result.success().addData("infos", roleService.findPermissionsWithRolePowerdInfoByRoleId(id));
+	}
+
+	public static class GrantDTO {
+		private int roleId;
+
+		private int[] grantIds;
+
+		public int getRoleId() {
+			return roleId;
+		}
+
+		public void setRoleId(int roleId) {
+			this.roleId = roleId;
+		}
+
+		public int[] getGrantIds() {
+			return grantIds;
+		}
+
+		public void setGrantIds(int[] grantIds) {
+			this.grantIds = grantIds;
+		}
+
+	}
+
+	@At("/grant")
+	@POST
+	@AdaptBy(type = JsonAdaptor.class)
+	public Result grantRole(GrantDTO dto) {
+		return roleService.setPermission(dto.getGrantIds(), dto.getRoleId());
+	}
+
 }
