@@ -23,6 +23,8 @@ import org.nutz.plugins.apidoc.annotation.Api;
 
 import club.zhcs.hammer.ThunderApplication.SessionKeys;
 import club.zhcs.hammer.bean.acl.User;
+import club.zhcs.hammer.biz.acl.PermissionService;
+import club.zhcs.hammer.biz.acl.RoleService;
 import club.zhcs.hammer.biz.acl.UserService;
 import club.zhcs.hammer.biz.shiro.ShiroUserService;
 import club.zhcs.hammer.ext.shiro.anno.ThunderRequiresRoles;
@@ -48,6 +50,12 @@ public class UserModule extends AbstractBaseModule {
 
 	@Inject
 	UserService userService;
+
+	@Inject
+	RoleService roleService;
+
+	@Inject
+	PermissionService permissionService;
 
 	@At
 	@GET
@@ -178,7 +186,8 @@ public class UserModule extends AbstractBaseModule {
 					_addCookie("kerbores", DES.encrypt(Json.toJson(data)), 24 * 60 * 60 * 365);
 				}
 			}
-			return result;
+			return result.addData("roles", shiroUserService.roleInfos(request.getData().getUserName())).addData("permissions",
+					shiroUserService.permissionInfos(request.getData().getUserName()));
 		} else {
 			return Result.fail("验证码输入错误");
 		}

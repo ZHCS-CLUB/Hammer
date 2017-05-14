@@ -137,9 +137,6 @@ export default {
         }
     },
     created:function(){
-        this.get('/test',data=>{
-            console.log(data);
-        })
     }
 }
 </script>

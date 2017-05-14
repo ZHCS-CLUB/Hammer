@@ -83,6 +83,46 @@ public class ShiroUserService {
 		return false;
 	}
 
+	public List<Role> roles(String userName) {
+		User user = userService.fetch(userName);
+		if (user == null) {
+			return Lists.newArrayList();
+		}
+		return getAllRoles(user.getId());
+	}
+
+	public List<Permission> permissions(String userName) {
+		User user = userService.fetch(userName);
+		if (user == null) {
+			return Lists.newArrayList();
+		}
+		return getAllPermissions(user.getId());
+	}
+
+	public List<String> roleInfos(String userName) {
+		final List<String> target = Lists.newArrayList();
+		Lang.each(roles(userName), new Each<Role>() {
+
+			@Override
+			public void invoke(int arg0, Role ele, int arg2) throws ExitLoop, ContinueLoop, LoopException {
+				target.add(ele.getName());
+			}
+		});
+		return target;
+	}
+
+	public List<String> permissionInfos(String userName) {
+		final List<String> target = Lists.newArrayList();
+		Lang.each(permissions(userName), new Each<Permission>() {
+
+			@Override
+			public void invoke(int arg0, Permission ele, int arg2) throws ExitLoop, ContinueLoop, LoopException {
+				target.add(ele.getName());
+			}
+		});
+		return target;
+	}
+
 	/**
 	 * 检查角色
 	 * 

@@ -78,6 +78,8 @@ export default {
             self.$refs[formName].validate((valid) => {
                 if (valid) {
                     self.postBody('/user/login', { data: self.ruleForm }, data => {
+                        localStorage.setItem('roles',JSON.stringify(data.data.roles));
+                        localStorage.setItem('permissions',JSON.stringify(data.data.permissions));
                         localStorage.setItem('loginUser', data.data.loginUser.realName || data.data.loginUser.name);
                         self.$router.push('/readme');
                     })
