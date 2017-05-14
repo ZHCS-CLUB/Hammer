@@ -46,7 +46,7 @@
                                 <div @click="handleEdit(scope.$index,scope.row)">
                                     <i class="fa fa-edit"></i> 编辑权限</div>
                             </el-dropdown-item>
-                            <el-dropdown-item>
+                            <el-dropdown-item v-show="!scope.row.installed">
                                 <div @click="handleDelete(scope.$index,scope.row)">
                                     <i class="fa fa-trash-o"></i> 删除权限</div>
                             </el-dropdown-item>

@@ -50,7 +50,7 @@
                                 <div @click="handleGrant(scope.$index,scope.row)">
                                     <i class="fa fa-bolt"></i> 设置权限</div>
                             </el-dropdown-item>
-                            <el-dropdown-item>
+                            <el-dropdown-item v-show="!scope.row.installed">
                                 <div @click="handleDelete(scope.$index,scope.row)">
                                     <i class="fa fa-trash-o"></i> 删除角色</div>
                             </el-dropdown-item>
