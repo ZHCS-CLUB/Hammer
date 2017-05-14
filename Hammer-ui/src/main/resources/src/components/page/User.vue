@@ -303,7 +303,6 @@ export default {
             this.type = type;
             let url = '/user/' + type + "/" + this.pager.entities[index].id;
             this.get(url, result => {
-                console.log(result);
                 this.options = [];
                 result.data.infos.forEach((item, index) => {
                     this.options.push({
