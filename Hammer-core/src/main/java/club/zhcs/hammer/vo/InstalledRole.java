@@ -16,27 +16,8 @@ public enum InstalledRole {
 	/**
 	 * 平台管理员
 	 */
-	SU("admin", "超级管理员"),
-	/**
-	 * 
-	 */
-	AF_INVESTIGATER("af.investigater", "AF 调查员"),
-	/**
-	 * 
-	 */
-	AF_LEADER("af.leader", "AF领导"),
-	/**
-	 * 
-	 */
-	REGION_INVESTIGATOR("region.investigator", "区域调查员"),
-	/**
-	 * 
-	 */
-	REGION_LEADER("region.leader", "区域领导"),
-	/**
-	 * 
-	 */
-	HEADQUARTERS("headquarters", "总部");
+	SU("admin", "超级管理员");
+
 	private String name;
 
 	private String description;

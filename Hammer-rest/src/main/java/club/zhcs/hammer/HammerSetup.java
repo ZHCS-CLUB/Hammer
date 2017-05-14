@@ -150,6 +150,7 @@ public class HammerSetup implements Setup {
 					temp = new Permission();
 					temp.setName(permission.getName());
 					temp.setDescription(permission.getDescription());
+					temp.setInstalled(true);
 					temp = permissionService.save(temp);
 				}
 
