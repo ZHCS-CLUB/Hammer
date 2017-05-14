@@ -194,30 +194,6 @@ public class ShiroUserService {
 	}
 
 	/**
-	 * 获取用户的菜单权限
-	 * 
-	 * @param id
-	 *            用户 id
-	 * @return 权限列表
-	 *
-	 * @author 王贵源
-	 */
-	public List<Permission> getMenuPermissions(int id) {
-		List<Permission> permissions = getAllPermissions(id);
-		final List<Permission> target = Lists.newArrayList();
-		Lang.each(permissions, new Each<Permission>() {
-
-			@Override
-			public void invoke(int index, Permission ele, int length) throws ExitLoop, ContinueLoop, LoopException {
-				if (ele.isMenu()) {
-					target.add(ele);
-				}
-			}
-		});
-		return target;
-	}
-
-	/**
 	 * 获取用户的角色信息列表
 	 * 
 	 * @param id
