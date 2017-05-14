@@ -2,37 +2,21 @@
     <div class="login-wrap">
         <div class="ms-title">Thunder Vue</div>
         <div class="ms-login">
-            <el-form :model="ruleForm"
-                     :rules="rules"
-                     ref="ruleForm"
-                     label-width="0px"
-                     class="demo-ruleForm">
+            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="0px" class="demo-ruleForm">
                 <el-form-item prop="userName">
-                    <el-input v-model="ruleForm.userName"
-                              placeholder="请输入用户名"
-                              icon="user"
-                              @keyup.enter.native="submitForm('ruleForm')">
+                    <el-input v-model="ruleForm.userName" placeholder="请输入用户名" icon="user" @keyup.enter.native="submitForm('ruleForm')">
                         <template slot="prepend">用户</template>
                     </el-input>
                 </el-form-item>
                 <el-form-item prop="password">
-                    <el-input type="password"
-                              placeholder="请输入密码"
-                              v-model="ruleForm.password"
-                              icon="lock"
-                              @keyup.enter.native="submitForm('ruleForm')">
+                    <el-input type="password" placeholder="请输入密码" v-model="ruleForm.password" icon="lock" @keyup.enter.native="submitForm('ruleForm')">
                         <template slot="prepend">密码</template>
                     </el-input>
                 </el-form-item>
                 <el-form-item prop="captcha">
-                    <el-input placeholder="请输入验证码"
-                              v-model="ruleForm.captcha"
-                              @keyup.enter.native="submitForm('ruleForm')">
+                    <el-input placeholder="请输入验证码" v-model="ruleForm.captcha" @keyup.enter.native="submitForm('ruleForm')">
                         <template slot="append">
-                            <img :src="captcha"
-                                 @click="refreshCaptcha"
-                                 class="append-img"
-                                 title="点击刷新验证码">
+                            <img :src="captcha" @click="refreshCaptcha" class="append-img" title="点击刷新验证码">
                         </template>
                     </el-input>
                 </el-form-item>
@@ -40,8 +24,7 @@
                     <el-checkbox v-model="ruleForm.rememberMe">记住我</el-checkbox>
                 </el-form-item>
                 <div class="login-btn">
-                    <el-button type="primary"
-                               @click="submitForm('ruleForm')">登录</el-button>
+                    <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
                 </div>
             </el-form>
         </div>
@@ -78,10 +61,17 @@ export default {
             self.$refs[formName].validate((valid) => {
                 if (valid) {
                     self.postBody('/user/login', { data: self.ruleForm }, data => {
-                        localStorage.setItem('roles',JSON.stringify(data.data.roles));
-                        localStorage.setItem('permissions',JSON.stringify(data.data.permissions));
+                        localStorage.setItem('roles', JSON.stringify(data.data.roles));
+                        localStorage.setItem('permissions', JSON.stringify(data.data.permissions));
                         localStorage.setItem('loginUser', data.data.loginUser.realName || data.data.loginUser.name);
                         self.$router.push('/readme');
+                    }, result => {
+                        this.$message({
+                            showClose: true,
+                            message: result.data.data.reason,
+                            type: 'error'
+                        });
+                        this.refreshCaptcha()
                     })
                 } else {
                     return false;

@@ -32,20 +32,20 @@ Vue.prototype.bizFail = function(reason) {
         type: 'error'
     });
 }
-Vue.prototype.get = function(url, success) { //全局get请求函数
+Vue.prototype.get = function(url, success, bizFail) { //全局get请求函数
     const message = this.$message;
     const error = this.requestFail;
     axios.get(baseUrl + url).then(resp => {
         if (resp.status == 200 && resp.data.operationState == 'SUCCESS') {
             success(resp.data);
         } else {
-            this.bizFail(resp.data.data.reason);
+            bizFail ? bizFail(resp) : this.bizFail(resp.data.data.reason);
         }
     }).catch(e => {
         error(e, message);
     });
 }
-Vue.prototype.postBody = function(url, body, success) { //全局post请求函数
+Vue.prototype.postBody = function(url, body, success, bizFail) { //全局post请求函数
     const message = this.$message;
     const error = this.requestFail;
     axios.post(baseUrl + url, body)
@@ -53,14 +53,14 @@ Vue.prototype.postBody = function(url, body, success) { //全局post请求函数
             if (resp.status == 200 && resp.data.operationState == 'SUCCESS') {
                 success(resp.data);
             } else {
-                this.bizFail(resp.data.data.reason);
+                bizFail ? bizFail(resp) : this.bizFail(resp.data.data.reason);
             }
         })
         .catch(e => {
             error(e, message);
         });
 }
-Vue.prototype.postForm = function(url, body, success) { //全局post请求函数
+Vue.prototype.postForm = function(url, body, success, bizFail) { //全局post请求函数
     const message = this.$message;
     const error = this.requestFail;
     var params = new URLSearchParams();
@@ -72,14 +72,14 @@ Vue.prototype.postForm = function(url, body, success) { //全局post请求函数
             if (resp.status == 200 && resp.data.operationState == 'SUCCESS') {
                 success(resp.data);
             } else {
-                this.bizFail(resp.data.data.reason);
+                bizFail ? bizFail(resp) : this.bizFail(resp.data.data.reason);
             }
         })
         .catch(e => {
             error(e, message);
         });
 }
-Vue.prototype.upload = function(url, body, success) { //全局文件上传请求函数
+Vue.prototype.upload = function(url, body, success, bizFail) { //全局文件上传请求函数
     const message = this.$message;
     const error = this.requestFail;
     var params = new FormData();
@@ -93,7 +93,7 @@ Vue.prototype.upload = function(url, body, success) { //全局文件上传请求
             if (resp.status == 200 && resp.data.operationState == 'SUCCESS') {
                 success(resp.data);
             } else {
-                this.bizFail(resp.data.data.reason);
+                bizFail ? bizFail(resp) : this.bizFail(resp.data.data.reason);
             }
         })
         .catch(e => {
@@ -101,9 +101,6 @@ Vue.prototype.upload = function(url, body, success) { //全局文件上传请求
         });
 }
 Vue.use(ElementUI);
-(function() {
-    console.log(baseUrl);
-})()
 new Vue({
     router,
     render: h => h(App)
