@@ -5,7 +5,7 @@
                 <el-breadcrumb-item>
                     <i class="fa fa-home"></i> 首页</el-breadcrumb-item>
                 <el-breadcrumb-item>
-                    <i class="fa fa-eys"></i> 权限</el-breadcrumb-item>
+                    <i class="fa fa-eye"></i> 权限</el-breadcrumb-item>
                 <el-breadcrumb-item>
                     <i class="fa fa-list"></i> 权限列表</el-breadcrumb-item>
             </el-breadcrumb>
