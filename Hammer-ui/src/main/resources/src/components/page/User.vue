@@ -76,7 +76,7 @@
             </el-col>
         </el-row>
         <!-- 弹框区域-->
-        <el-dialog :title="user.id == 0 ? '添加用户' : '编辑用户' " :visible.sync="addEditShow">
+        <el-dialog :title="user.id == 0 ? '添加用户' : '编辑用户' " :visible.sync="addEditShow" size="tiny">
             <el-form :model="user" :rules="checkUser" ref="userForm">
                 <el-form-item label="用户名" :label-width="formLabelWidth" prop="name">
                     <el-input v-model="user.name" auto-complete="off"></el-input>
@@ -194,7 +194,7 @@ export default {
                     { validator: validateEmail, trigger: 'blur' }
                 ]
             },
-            formLabelWidth: '120px'
+            formLabelWidth: '100px'
         }
     },
     watch: {},
