@@ -30,7 +30,7 @@ public class CodeBookModule extends AbstractBaseModule {
 	@At
 	@GET
 	public Result list(@Param(value = "page", df = "1") int page) {
-		return Result.success().addData("pager", codebookService.searchByPage(_fixPage(page)));
+		return Result.success().addData("pager", codebookService.searchByPage(_fixPage(page), Cnd.where("parentId", "=", 0)));
 	}
 
 	@At

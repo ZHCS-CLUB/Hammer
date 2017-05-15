@@ -6,6 +6,10 @@ import 'element-ui/lib/theme-default/index.css'; // 默认主题
 // import '../static/css/theme-green/index.css';       // 浅绿色主题
 import "babel-polyfill";
 import axios from 'axios';
+import ElTreeGrid from 'element-tree-grid';
+Vue.component(ElTreeGrid.name, ElTreeGrid);
+import ElTableTreeColumn from 'element-tree-grid/src/index.js';
+Vue.component(ElTreeGrid.name, ElTreeGrid)
 
 global.baseUrl = process.env.NODE_ENV == "development" ? 'Hammer-rest' : '';
 
