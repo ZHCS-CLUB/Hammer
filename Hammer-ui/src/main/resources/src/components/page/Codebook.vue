@@ -125,7 +125,7 @@ export default {
                     { required: true, message: '请输入码本数据值', trigger: 'blur' }
                 ],
                 groupId: [
-                    { required: true, message: '请选择数据分组', trigger: 'blur' }
+                    {type:'number', required: true, message: '请选择数据分组', trigger: 'blur' }
                 ]
             },
             formLabelWidth: '120px'
