@@ -66,4 +66,10 @@ public class GroupModule extends AbstractBaseModule {
 		return groupService.updateIgnoreNull(group) != 1 ? Result.fail("更新分组失败!") : Result.success().addData("group", group);
 	}
 
+	@At
+	@GET
+	public Result all() {
+		return Result.success().addData("groups", groupService.queryAll());
+	}
+
 }

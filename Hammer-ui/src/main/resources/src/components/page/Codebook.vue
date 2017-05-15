@@ -5,9 +5,9 @@
                 <el-breadcrumb-item>
                     <i class="fa fa-home"></i> 首页</el-breadcrumb-item>
                 <el-breadcrumb-item>
-                    <i class="fa fa-user"></i> 用户</el-breadcrumb-item>
+                    <i class="fa fa-cubes"></i> 码本</el-breadcrumb-item>
                 <el-breadcrumb-item>
-                    <i class="fa fa-list"></i> 用户列表</el-breadcrumb-item>
+                    <i class="fa fa-list"></i> 码本列表</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <el-row>
@@ -19,22 +19,15 @@
                 </el-input>
             </el-col>
             <el-col :span="6" :offset="12">
-                <el-button type="primary" icon="plus" @click="addEditShow = true">添加用户</el-button>
+                <el-button type="primary" icon="plus" @click="addEditShow = true ; codebook={groupId:null};nodes=[]">添加码本</el-button>
             </el-col>
         </el-row>
         <el-table :data="pager.entities" border style="width: 100%">
             <el-table-column prop="id" label="ID" sortable>
             </el-table-column>
-            <el-table-column prop="name" label="用户名">
+            <el-table-column prop="name" label="Key">
             </el-table-column>
-            <el-table-column prop="realName" label="姓名">
-            </el-table-column>
-            <el-table-column prop="createTime" label="创建时间" :formatter="formatter">
-            </el-table-column>
-            <el-table-column prop="status" label="状态">
-                <template scope="scope">
-                    <el-tag :type="scope.row.status === 'A' ? 'success' : 'danger'" close-transition>{{scope.row.status == 'A' ? 'ACTIVIED' : 'DISABLED'}}</el-tag>
-                </template>
+            <el-table-column prop="value" label="Value">
             </el-table-column>
             <el-table-column label="操作">
                 <template scope="scope">
@@ -46,23 +39,11 @@
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item>
                                 <div @click="handleEdit(scope.$index,scope.row)">
-                                    <i class="fa fa-edit"></i> 编辑用户</div>
+                                    <i class="fa fa-edit"></i> 编辑码本</div>
                             </el-dropdown-item>
-                            <el-dropdown-item>
-                                <div @click="handleEdit(scope.$index,scope.row)">
-                                    <i class="fa fa-lock"></i> 重置密码</div>
-                            </el-dropdown-item>
-                            <el-dropdown-item>
-                                <div @click="handleEdit(scope.$index,scope.row)">
-                                    <i class="fa fa-fire"></i> 设置角色</div>
-                            </el-dropdown-item>
-                            <el-dropdown-item>
-                                <div @click="handleEdit(scope.$index,scope.row)">
-                                    <i class="fa fa-bolt"></i> 设置权限</div>
-                            </el-dropdown-item>
-                            <el-dropdown-item>
+                            <el-dropdown-item v-show="!scope.row.installed">
                                 <div @click="handleDelete(scope.$index,scope.row)">
-                                    <i class="fa fa-trash-o"></i> 删除用户</div>
+                                    <i class="fa fa-trash-o"></i> 删除码本</div>
                             </el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
@@ -71,39 +52,36 @@
         </el-table>
         <el-row>
             <el-col :span="6" :offset="18">
-                <el-pagination style="float:right" layout="prev, pager, next" :total="pager.count" :page-size="pager.pageSize" :current-page.sync="pager.page" v-show="pager.count != 0"  @current-change="changePage">
+                <el-pagination style="float:right" layout="prev, pager, next" :total="pager.count" :page-size="pager.pageSize" :current-page.sync="pager.page" v-show="pager.count != 0" @current-change="changePage">
                 </el-pagination>
             </el-col>
         </el-row>
         <!-- 弹框区域-->
-        <el-dialog :title="user.id == 0 ? '添加用户' : '编辑用户' " :visible.sync="addEditShow">
-            <el-form :model="user" :rules="checkUser" ref="userForm">
-                <el-form-item label="用户名" :label-width="formLabelWidth" prop="name">
-                    <el-input v-model="user.name" auto-complete="off"></el-input>
+        <el-dialog :title="codebook.id == 0 ? '添加码本' : '编辑码本' " :visible.sync="addEditShow" size="tiny">
+            <el-form :model="codebook" :rules="checkCodebook" ref="codebookForm">
+                <el-form-item label="分组" :label-width="formLabelWidth" prop="groupId">
+                    <el-select v-model="codebook.groupId" placeholder="请选择码本分组" @change="loadTop" prop="groupId">
+                        <el-option v-for="item in groups" :key="item.name" :label="item.description" :value="item.id">
+                        </el-option>
+                    </el-select>
                 </el-form-item>
-                <el-form-item label="真实姓名" :label-width="formLabelWidth" prop="realName">
-                    <el-input v-model="user.realName" auto-complete="off"></el-input>
+                <el-form-item label="上级" :label-width="formLabelWidth" prop="parentId">
+                    <el-tree :data="nodes" show-checkbox check-strictly lazy :load="loadNode" node-key="id" ref="tree" highlight-current :props="defaultProps">
+                    </el-tree>
                 </el-form-item>
-                <el-form-item label="密码" :label-width="formLabelWidth" prop="password" v-show="user.password != '00000000'">
-                    <el-input type="password" v-model="user.password" auto-complete="off"></el-input>
+                <el-form-item label="Key" :label-width="formLabelWidth" prop="name">
+                    <el-input v-model="codebook.name" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="确认密码" :label-width="formLabelWidth" prop="rePassword" v-show="user.rePassword != '00000000'">
-                    <el-input type="password" v-model="user.rePassword" auto-complete="off"></el-input>
+                <el-form-item label="Value" :label-width="formLabelWidth" prop="value">
+                    <el-input v-model="codebook.value" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="电话" :label-width="formLabelWidth" prop="phone">
-                    <el-input v-model="user.phone" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="邮箱" :label-width="formLabelWidth" prop="email">
-                    <el-input v-model="user.email" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="用户状态" :label-width="formLabelWidth">
-                    <el-switch v-model="user.status" on-text="ACTIVIED" off-text="DISABLED" on-value="A" off-value="D" :width="100">
-                    </el-switch>
+                <el-form-item label="序号" :label-width="formLabelWidth" prop="index">
+                    <el-input v-model="codebook.index" auto-complete="off"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="addEditShow = false ; user = {status:'A'}">取 消</el-button>
-                <el-button type="primary" @click="saveOrUpdateUser('userForm')">确 定</el-button>
+                <el-button @click="addEditShow = false ; user = {installed:false}">取 消</el-button>
+                <el-button type="primary" @click="saveOrUpdateCodebook('codebookForm')">确 定</el-button>
             </div>
         </el-dialog>
     
@@ -115,70 +93,39 @@ import axios from 'axios';
 import moment from 'moment'
 export default {
     data() {
-        var validatePassSame = (rule, value, callback) => {
-            if (value == this.user.password) {
-                callback();
-            } else {
-                callback(new Error("两次输入密码不一致"));
-            }
-        };
-        var validateMobile = (rule, value, callback) => {
-            if (/^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/.test(value)) {
-                callback();
-            } else {
-                callback(new Error("请输入正确的手机号码"));
-            }
-        };
-        var validateEmail = (rule, value, callback) => {
-            if (/\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/.test(value)) {
-                callback();
-            } else {
-                callback(new Error("请输入正确的邮箱地址"));
-            }
-        };
         return {
+            nodes: [],
+            defaultProps: {
+                children: 'children',
+                label: 'value'
+            },
             searchKey: '',
             pager: {
                 page: 1,
                 pageSize: 15,
-                paras:{
-                    key:'1'
+                paras: {
+                    key: '1'
                 }
             },
             addEditShow: false,
-            user: {
+            groups: [],
+            codebook: {
                 id: 0,
                 name: '',
-                realName: '',
-                status: 'A',
-                password: '',
-                rePassword: '',
-                phone: '',
-                email: ''
+                value: '',
+                groupId: null,
+                parentId: 0,
+                index: 0
             },
-            checkUser: {
+            checkCodebook: {
                 name: [
-                    { required: true, message: '请输入用户名', trigger: 'blur' }
+                    { required: true, message: '请输入码本数据名称', trigger: 'blur' }
                 ],
-                realName: [
-                    { required: true, message: '请输入真实姓名', trigger: 'blur' }
+                value: [
+                    { required: true, message: '请输入码本数据值', trigger: 'blur' }
                 ],
-                password: [
-                    { required: true, message: '请输入密码', trigger: 'blur' },
-                    { min: 8, max: 16, message: '请输入8到16位密码', trigger: 'blur' }
-                ],
-                rePassword: [
-                    { required: true, message: '请输入密码', trigger: 'blur' },
-                    { min: 8, max: 16, message: '请输入8到16位密码', trigger: 'blur' },
-                    { validator: validatePassSame, trigger: 'blur' }
-                ],
-                phone: [
-                    { required: true, message: '请输入手机号', trigger: 'blur' },
-                    { validator: validateMobile, trigger: 'blur' }
-                ],
-                email: [
-                    { required: true, message: '请输入电子邮箱', trigger: 'blur' },
-                    { validator: validateEmail, trigger: 'blur' }
+                groupId: [
+                    { required: true, message: '请选择数据分组', trigger: 'blur' }
                 ]
             },
             formLabelWidth: '120px'
@@ -186,70 +133,90 @@ export default {
     },
     watch: {},
     methods: {
-        changePage(){
-            if(this.pager.paras.key){
+        loadGroups() {
+            this.get('/group/all', result => {
+                this.groups = result.data.groups;
+            })
+        },
+        loadTop() {
+            if (this.codebook.groupId) {
+                this.get('/codebook/top/' + this.codebook.groupId, result => {
+                    this.nodes = result.data.codes;
+                })
+            }
+        },
+        loadNode(node, resolve) {
+            if (node.data.id) {
+                this.get('/codebook/sub/' + node.data.id, result => {
+                    resolve(result.data.codes)
+                })
+            }
+        },
+        changePage() {
+            if (this.pager.paras.key) {
                 this.doSearch();
-            }else{
+            } else {
                 this.loadData();
             }
         },
-        doSearch(){
-            this.get('/user/search?page=' + this.pager.page + '&key=' + this.pager.paras.key, result => {
+        doSearch() {
+            this.get('/codebook/search?page=' + this.pager.page + '&key=' + this.pager.paras.key, result => {
                 this.pager = result.data.pager;
             })
         },
-        saveOrUpdateUser(formName) {
+        saveOrUpdateCodebook(formName) {
+            if (this.$refs.tree.getCheckedNodes(true).length) {
+                this.codebook.parentId = this.$refs.tree.getCheckedNodes(true)[0].id
+            }
             this.$refs[formName].validate(valid => {
                 if (valid) {
-                    let url = this.user.id ? '/user/update' : '/user/save'
-                    this.postBody(url, this.user, result => {
-                        location.reload();
+                    let url = this.codebook.id ? '/codebook/update' : '/codebook/save'
+                    this.postBody(url, this.codebook, result => {
+                        this.changePage();
+                        this.addEditShow = false;
                     })
                 } else {
                     return false;
                 }
-            })
-        },
-        formatter(row, column) {
-            return moment(row.createTime, "YYYY-MM-DD hh:mm:ss").format('YYYY年MM月DD日');
+            });
         },
         handleEdit(index, row) {
             let id = this.pager.entities[index].id;
-            this.get('/user/' + id, result => {
-                this.user = result.data.user;
-                this.user.password = '00000000';
-                this.user.rePassword = '00000000';
+            this.get('/codebook/' + id, result => {
+                this.codebook = result.data.codebook;
+                this.loadTop();
                 this.addEditShow = true;
             })
         },
         handleDelete(index, row) {
             let id = this.pager.entities[index].id;
-            this.$confirm('确认删除用户?', '删除确认', {
+            this.$confirm('确认删除码本数据?', '删除确认', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                this.get('/user/delete/' + id, result => {
+                this.get('/codebook/delete/' + id, result => {
                     this.$message({
                         type: 'success',
                         message: '删除成功!'
                     });
-                    window.setTimeout(()=>{
-                        location.reload();
-                    },2000)
+                    window.setTimeout(() => {
+                        this.changePage();
+                    }, 2000)
                 })
             }).catch(() => {
             });
         },
         loadData() {
-            this.get('/user/list?page=' + this.pager.page, result => {
+            this.get('/codebook/list?page=' + this.pager.page, result => {
                 this.pager = result.data.pager;
-                this.pager.paras={key:''}
+                this.pager.paras = { key: '' }
             })
         }
     },
     mounted: function () {
         this.loadData();
+        this.loadGroups();
     }
 }
 </script>

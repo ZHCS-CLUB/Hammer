@@ -5,7 +5,7 @@
                 <el-breadcrumb-item>
                     <i class="fa fa-home"></i> 首页</el-breadcrumb-item>
                 <el-breadcrumb-item>
-                    <i class="fa fa-eye"></i> 分组</el-breadcrumb-item>
+                    <i class="fa fa-object-group"></i> 分组</el-breadcrumb-item>
                 <el-breadcrumb-item>
                     <i class="fa fa-list"></i> 分组列表</el-breadcrumb-item>
             </el-breadcrumb>
@@ -57,7 +57,7 @@
             </el-col>
         </el-row>
         <!-- 弹框区域-->
-        <el-dialog :title="group.id == 0 ? '添加分组' : '编辑分组' " :visible.sync="addEditShow">
+        <el-dialog :title="group.id == 0 ? '添加分组' : '编辑分组' " :visible.sync="addEditShow" size="tiny">
             <el-form :model="group" :rules="checkGroup" ref="groupForm">
                 <el-form-item label="名称" :label-width="formLabelWidth" prop="name">
                     <el-input v-model="group.name" auto-complete="off"></el-input>

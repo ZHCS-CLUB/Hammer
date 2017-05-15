@@ -66,7 +66,7 @@
             </el-col>
         </el-row>
         <!-- 弹框区域-->
-        <el-dialog :title="role.id == 0 ? '添加角色' : '编辑角色' " :visible.sync="addEditShow">
+        <el-dialog :title="role.id == 0 ? '添加角色' : '编辑角色' " :visible.sync="addEditShow" size="tiny">
             <el-form :model="role" :rules="checkRole" ref="roleForm">
                 <el-form-item label="名称" :label-width="formLabelWidth" prop="name">
                     <el-input v-model="role.name" auto-complete="off"></el-input>

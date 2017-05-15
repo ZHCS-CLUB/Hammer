@@ -62,7 +62,7 @@
             </el-col>
         </el-row>
         <!-- 弹框区域-->
-        <el-dialog :title="permission.id == 0 ? '添加权限' : '编辑权限' " :visible.sync="addEditShow">
+        <el-dialog :title="permission.id == 0 ? '添加权限' : '编辑权限' " :visible.sync="addEditShow" size="tiny">
             <el-form :model="permission" :rules="checkPermission" ref="permissionForm">
                 <el-form-item label="名称" :label-width="formLabelWidth" prop="name">
                     <el-input v-model="permission.name" auto-complete="off"></el-input>

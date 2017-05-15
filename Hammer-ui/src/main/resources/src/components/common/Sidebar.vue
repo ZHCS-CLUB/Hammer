@@ -14,12 +14,12 @@
                 <el-menu-item index="/permission" v-show="hasPermission('permission.list')">
                     <i class="fa fa-eye"></i> 权限管理</el-menu-item>
             </el-submenu>
-            <el-submenu index="3">
+            <el-submenu index="3" v-show="hasPermission('group.list') || hasPermission('codebook.list')">
                 <template slot="title">
                     <i class="el-icon- fa fa-book"></i>码本管理</template>
-                <el-menu-item index="/group">
+                <el-menu-item index="/group" v-show="hasPermission('group.list')">
                     <i class="fa fa-object-group"></i> 码本分组</el-menu-item>
-                <el-menu-item index="/codebook">
+                <el-menu-item index="/codebook" v-show="hasPermission('codebook.list')">
                     <i class="fa fa-cubes"></i> 码本数据</el-menu-item>
             </el-submenu>
             <el-submenu index="4">

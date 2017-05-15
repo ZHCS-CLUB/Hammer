@@ -14,9 +14,9 @@ import org.nutz.mvc.NutFilter;
 		DispatcherType.REQUEST,
 		DispatcherType.FORWARD,
 		DispatcherType.INCLUDE }, initParams = {
-		@WebInitParam(name = "modules", value = "club.zhcs.hammer.module.MainModule"),
-		@WebInitParam(name = "exclusions", value = "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*,/sigar")
-})
+				@WebInitParam(name = "modules", value = "club.zhcs.hammer.module.MainModule"),
+				@WebInitParam(name = "exclusions", value = "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*,/sigar/*")
+		})
 public class C_HammerFilter extends NutFilter {
 
 }
