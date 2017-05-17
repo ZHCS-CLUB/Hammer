@@ -36,7 +36,7 @@ public class CodeBookModule extends AbstractBaseModule {
 	@At
 	@GET
 	public Result search(@Param("key") String key, @Param(value = "page", df = "1") int page) {
-		Pager<CodeBook> pager = codebookService.searchByKeyAndPage(_fixSearchKey(key), _fixPage(page), "name", "description");
+		Pager<CodeBook> pager = codebookService.searchByKeyAndPage(_fixSearchKey(key), _fixPage(page), Cnd.where("parentId", "=", 0), "name", "value");
 		pager.addParas("key", key);
 		return Result.success().addData("pager", pager);
 	}

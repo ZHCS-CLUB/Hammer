@@ -23,7 +23,12 @@
             </el-col>
         </el-row>
         <el-table :data="pager.entities" border style="width: 100%">
-            <el-table-tree-column :remote="remote" :expand-all="!!1" file-icon="icon icon-file" folder-icon="icon icon-folder" prop="id" label="ID"></el-table-tree-column>
+            <el-table-tree-column 
+            :remote="remote"
+            file-icon="icon icon-file" 
+            folder-icon="icon icon-folder" 
+            parentKey="parentId"
+            prop="id" label="ID"></el-table-tree-column>
             <el-table-column prop="name" label="Key">
             </el-table-column>
             <el-table-column prop="value" label="Value">
@@ -132,12 +137,14 @@ export default {
     },
     watch: {},
     methods: {
-        remote(row, callback) {
-            this.get('/codebook/sub/' + row.id, result => {
-                var data = [];
-                result.data.codes.forEach(item=>{
-                    data.push(item);
-                })
+        remote(row,callback){
+            this.get('/codebook/sub/'+row.id,result=>{
+                const data = [];
+                 result.data.codes.forEach(item=>{
+                    item.children = [{}];
+                     data.push(item)
+                 })
+                // row.children = data;
                 callback(data);
             })
         },
@@ -169,15 +176,16 @@ export default {
         },
         doSearch() {
             this.get('/codebook/search?page=' + this.pager.page + '&key=' + this.pager.paras.key, result => {
-                this.pager = result.data.pager;
+                 this.pager = result.data.pager;
+                this.pager.entities.forEach(item=>{
+                    item.children = [{}]
+                });
             })
         },
         saveOrUpdateCodebook(formName) {
-            console.log(this.$refs.tree.getCheckedNodes(true))
             if (this.$refs.tree.getCheckedNodes(true).length) {
                 this.codebook.parentId = this.$refs.tree.getCheckedNodes(true)[0].id
             }
-            console.log(this.codebook.parentId);
             this.$refs[formName].validate(valid => {
                 if (valid) {
                     let url = this.codebook.id ? '/codebook/update' : '/codebook/save'
@@ -191,7 +199,7 @@ export default {
             });
         },
         handleEdit(index, row) {
-            let id = this.pager.entities[index].id;
+            let id = row.id;
             this.get('/codebook/' + id, result => {
                 this.codebook = result.data.codebook;
                 this.loadTop();
@@ -199,7 +207,7 @@ export default {
             })
         },
         handleDelete(index, row) {
-            let id = this.pager.entities[index].id;
+            let id = row.id;
             this.$confirm('确认删除码本数据?', '删除确认', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
@@ -221,7 +229,7 @@ export default {
             this.get('/codebook/list?page=' + this.pager.page, result => {
                 this.pager = result.data.pager;
                 this.pager.paras = { key: '' };
-                this.pager.entities.forEach(item => {
+                this.pager.entities.forEach(item=>{
                     item.children = [{}]
                 });
             })
