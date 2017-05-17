@@ -176,7 +176,10 @@ export default {
         },
         doSearch() {
             this.get('/codebook/search?page=' + this.pager.page + '&key=' + this.pager.paras.key, result => {
-                this.pager = result.data.pager;
+                 this.pager = result.data.pager;
+                this.pager.entities.forEach(item=>{
+                    item.children = [{}]
+                });
             })
         },
         saveOrUpdateCodebook(formName) {
