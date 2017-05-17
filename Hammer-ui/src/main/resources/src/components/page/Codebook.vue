@@ -23,40 +23,7 @@
             </el-col>
         </el-row>
         <el-table :data="pager.entities" border style="width: 100%">
-            <el-table-tree-column 
-            :remote="remote"
-            :expand-all="!!1"
-            file-icon="icon icon-file" 
-            folder-icon="icon icon-folder" 
-            prop="id" label="ID"></el-table-tree-column>
-            <el-table-column prop="name" label="Key">
-            </el-table-column>
-            <el-table-column prop="value" label="Value">
-            </el-table-column>
-            <el-table-column label="操作">
-                <template scope="scope">
-                    <el-dropdown>
-                        <el-button type="primary">
-                            操作
-                            <i class="el-icon-caret-bottom el-icon--right"></i>
-                        </el-button>
-                        <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item>
-                                <div @click="handleEdit(scope.$index,scope.row)">
-                                    <i class="fa fa-edit"></i> 编辑码本</div>
-                            </el-dropdown-item>
-                            <el-dropdown-item v-show="!scope.row.installed">
-                                <div @click="handleDelete(scope.$index,scope.row)">
-                                    <i class="fa fa-trash-o"></i> 删除码本</div>
-                            </el-dropdown-item>
-                        </el-dropdown-menu>
-                    </el-dropdown>
-                </template>
-            </el-table-column>
-        </el-table>
-        <el-table :data="pager.entities" border style="width: 100%">
-            <el-table-column prop="id" label="ID" sortable>
-            </el-table-column>
+            <el-table-tree-column :remote="remote" :expand-all="!!1" file-icon="icon icon-file" folder-icon="icon icon-folder" prop="id" label="ID"></el-table-tree-column>
             <el-table-column prop="name" label="Key">
             </el-table-column>
             <el-table-column prop="value" label="Value">
@@ -165,9 +132,13 @@ export default {
     },
     watch: {},
     methods: {
-        remote(row,callback){
-            this.get('/codebook/sub/'+row.id,result=>{
-                callback(result.data.codes);
+        remote(row, callback) {
+            this.get('/codebook/sub/' + row.id, result => {
+                var data = [];
+                result.data.codes.forEach(item=>{
+                    data.push(item);
+                })
+                callback(data);
             })
         },
         loadGroups() {
@@ -202,9 +173,11 @@ export default {
             })
         },
         saveOrUpdateCodebook(formName) {
+            console.log(this.$refs.tree.getCheckedNodes(true))
             if (this.$refs.tree.getCheckedNodes(true).length) {
                 this.codebook.parentId = this.$refs.tree.getCheckedNodes(true)[0].id
             }
+            console.log(this.codebook.parentId);
             this.$refs[formName].validate(valid => {
                 if (valid) {
                     let url = this.codebook.id ? '/codebook/update' : '/codebook/save'
@@ -248,7 +221,7 @@ export default {
             this.get('/codebook/list?page=' + this.pager.page, result => {
                 this.pager = result.data.pager;
                 this.pager.paras = { key: '' };
-                this.pager.entities.forEach(item=>{
+                this.pager.entities.forEach(item => {
                     item.children = [{}]
                 });
             })
