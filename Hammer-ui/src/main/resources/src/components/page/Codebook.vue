@@ -196,7 +196,7 @@ export default {
             });
         },
         handleEdit(index, row) {
-            let id = this.pager.entities[index].id;
+            let id = row.id;
             this.get('/codebook/' + id, result => {
                 this.codebook = result.data.codebook;
                 this.loadTop();
@@ -204,7 +204,7 @@ export default {
             })
         },
         handleDelete(index, row) {
-            let id = this.pager.entities[index].id;
+            let id = row.id;
             this.$confirm('确认删除码本数据?', '删除确认', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
