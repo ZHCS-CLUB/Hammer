@@ -35,8 +35,9 @@ public class CodeBookModule extends AbstractBaseModule {
 
 	@At
 	@GET
-	public Result search(@Param("key") String key, @Param(value = "page", df = "1") int page) {
-		Pager<CodeBook> pager = codebookService.searchByKeyAndPage(_fixSearchKey(key), _fixPage(page), Cnd.where("parentId", "=", 0), "name", "value");
+	public Result search(@Param("key") String key, @Param(value = "group", df = "0") int groupId, @Param(value = "page", df = "1") int page) {
+		Cnd cnd = groupId == 0 ? Cnd.where("parentId", "=", 0) : Cnd.where("parentId", "=", 0).and("groupId", "=", groupId);
+		Pager<CodeBook> pager = codebookService.searchByKeyAndPage(_fixSearchKey(key), _fixPage(page), cnd, "name", "value");
 		pager.addParas("key", key);
 		return Result.success().addData("pager", pager);
 	}
