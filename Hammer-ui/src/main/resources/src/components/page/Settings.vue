@@ -27,7 +27,7 @@
             </el-table-column>
             <el-table-column prop="name" label="名称">
             </el-table-column>
-             <el-table-column prop="value" label="值">
+             <el-table-column prop="value" label="值" show-overflow-tooltip>
             </el-table-column>
             <el-table-column prop="description" label="描述">
             </el-table-column>
