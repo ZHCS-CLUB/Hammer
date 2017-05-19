@@ -16,41 +16,26 @@
                     </div>
                 </el-input>
             </el-col>
-            <el-col :span="6" :offset="12">
-                <el-button type="primary" icon="plus" @click="addEditShow = true">添加权限</el-button>
-            </el-col>
         </el-row>
         <el-table :data="pager.entities" border style="width: 100%">
             <el-table-column prop="id" label="ID" sortable>
             </el-table-column>
-            <el-table-column prop="name" label="名称">
+            <el-table-column prop="actionTime" label="时间" show-overflow-tooltip :formatter="formatter">
             </el-table-column>
-            <el-table-column prop="description" label="描述">
+            <el-table-column prop="account" label="操作用户"  >
             </el-table-column>
-            <el-table-column prop="status" label="状态">
-                <template scope="scope">
-                    <el-tag :type="scope.row.installed  ? 'success' : 'danger'" close-transition>{{scope.row.installed ? '内置' : '自由'}}</el-tag>
+            <el-table-column prop="ip" label="ip">
+            </el-table-column>
+            <el-table-column prop="module" label="模块">
+            </el-table-column>
+            <el-table-column prop="action" label="功能">
+            </el-table-column>
+            <!--el-table-column prop="ip" label="结果">
+             <template scope="scope">
+                    <el-tag :type="scope.row.success  ? 'success' : 'danger'" close-transition>{{scope.row.success ? '成功' : '失败'}}</el-tag>
                 </template>
-            </el-table-column>
-            <el-table-column label="操作">
-                <template scope="scope">
-                    <el-dropdown>
-                        <el-button type="primary">
-                            操作
-                            <i class="el-icon-caret-bottom el-icon--right"></i>
-                        </el-button>
-                        <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item>
-                                <div @click="handleEdit(scope.$index,scope.row)">
-                                    <i class="fa fa-edit"></i> 编辑权限</div>
-                            </el-dropdown-item>
-                            <el-dropdown-item v-show="!scope.row.installed">
-                                <div @click="handleDelete(scope.$index,scope.row)">
-                                    <i class="fa fa-trash-o"></i> 删除权限</div>
-                            </el-dropdown-item>
-                        </el-dropdown-menu>
-                    </el-dropdown>
-                </template>
+            </el-table-column-->
+            <el-table-column prop="operationTime" label="耗时">
             </el-table-column>
         </el-table>
         <el-row>
@@ -59,22 +44,6 @@
                 </el-pagination>
             </el-col>
         </el-row>
-        <!-- 弹框区域-->
-        <el-dialog :title="permission.id == 0 ? '添加权限' : '编辑权限' " :visible.sync="addEditShow" size="tiny">
-            <el-form :model="permission" :rules="checkPermission" ref="permissionForm">
-                <el-form-item label="名称" :label-width="formLabelWidth" prop="name">
-                    <el-input v-model="permission.name" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="描述" :label-width="formLabelWidth" prop="description">
-                    <el-input v-model="permission.description" auto-complete="off"></el-input>
-                </el-form-item>
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click="addEditShow = false ; user = {installed:false}">取 消</el-button>
-                <el-button type="primary" @click="saveOrUpdatePermission('permissionForm')">确 定</el-button>
-            </div>
-        </el-dialog>
-    
     </div>
 </template>
 
@@ -91,27 +60,14 @@ export default {
                 paras:{
                     key:'1'
                 }
-            },
-            addEditShow: false,
-            permission: {
-                id: 0,
-                name: '',
-                description: '',
-                installed: false
-            },
-            checkPermission: {
-                name: [
-                    { required: true, message: '请输入权限名称', trigger: 'blur' }
-                ],
-                description: [
-                    { required: true, message: '请输入权限描述', trigger: 'blur' }
-                ]
-            },
-            formLabelWidth: '120px'
+            }
         }
     },
     watch: {},
     methods: {
+        formatter(row, column){
+             return moment(row.actionTime, "YYYY-MM-DD hh:mm:ss").format('YYYY/MM/DD hh:mm:ss');
+        },
         changePage(){
             if(this.pager.paras.key){
                 this.doSearch();
@@ -120,51 +76,12 @@ export default {
             }
         },
         doSearch(){
-            this.get('/permission/search?page=' + this.pager.page + '&key=' + this.pager.paras.key, result => {
+            this.get('/log/search?page=' + this.pager.page + '&key=' + this.pager.paras.key, result => {
                 this.pager = result.data.pager;
             })
         },
-        saveOrUpdatePermission(formName) {
-            this.$refs[formName].validate(valid => {
-                if (valid) {
-                    let url = this.permission.id ? '/permission/update' : '/permission/save'
-                    this.postBody(url, this.permission, result => {
-                        this.changePage();
-                        this.addEditShow = false;
-                    })
-                } else {
-                    return false;
-                }
-            })
-        },
-        handleEdit(index, row) {
-            let id = this.pager.entities[index].id;
-            this.get('/permission/' + id, result => {
-                this.permission = result.data.permission;
-                this.addEditShow = true;
-            })
-        },
-        handleDelete(index, row) {
-            let id = this.pager.entities[index].id;
-            this.$confirm('确认删除权限?', '删除确认', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(() => {
-                this.get('/permission/delete/' + id, result => {
-                    this.$message({
-                        type: 'success',
-                        message: '删除成功!'
-                    });
-                    window.setTimeout(()=>{
-                        this.changePage();
-                    },2000)
-                })
-            }).catch(() => {
-            });
-        },
         loadData() {
-            this.get('/permission/list?page=' + this.pager.page, result => {
+            this.get('/log/list?page=' + this.pager.page, result => {
                 this.pager = result.data.pager;
                 this.pager.paras={key:''}
             })
