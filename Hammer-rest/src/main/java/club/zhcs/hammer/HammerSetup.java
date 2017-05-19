@@ -102,7 +102,21 @@ public class HammerSetup implements Setup {
 		Daos.createTablesInPackage(dao, getClass().getPackage().getName() + ".bean", false);
 		Daos.migration(dao, getClass().getPackage().getName() + ".bean", true, true);
 
-		ConfigService configService = ioc.get(ConfigService.class);
+		final ConfigService configService = ioc.get(ConfigService.class);
+
+		Lang.each(p.keys(), new Each<String>() {
+
+			@Override
+			public void invoke(int index, String key, int length) throws ExitLoop, ContinueLoop, LoopException {
+				if (!configService.exists(key)) {
+					Config config = new Config();
+					config.setName(key);
+					config.setValue(p.get(key));
+					config.setInstalled(true);
+					configService.save(config);
+				}
+			}
+		});
 
 		Lang.each(configService.queryAll(), new Each<Config>() {
 

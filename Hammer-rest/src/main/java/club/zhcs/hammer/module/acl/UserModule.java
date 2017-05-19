@@ -22,6 +22,7 @@ import org.nutz.mvc.filter.CrossOriginFilter;
 import org.nutz.plugins.apidoc.annotation.Api;
 
 import club.zhcs.hammer.ThunderApplication.SessionKeys;
+import club.zhcs.hammer.apm.SystemLog;
 import club.zhcs.hammer.bean.acl.User;
 import club.zhcs.hammer.biz.acl.PermissionService;
 import club.zhcs.hammer.biz.acl.RoleService;
@@ -93,12 +94,14 @@ public class UserModule extends AbstractBaseModule {
 
 	@At("/?")
 	@GET
+	@SystemLog(module = "用户", method = "用户详情", description = "查看用户详细洗洗")
 	public Result detail(long id) {
 		return Result.success().addData("user", userService.fetch(id));
 	}
 
 	@At("/delete/?")
 	@GET
+	@SystemLog(module = "用户", method = "删除用户", description = "将用户从数据库中删除")
 	public Result delete(long id) {
 		return userService.delete(id) == 1 ? Result.success() : Result.fail("删除用户失败!");
 	}

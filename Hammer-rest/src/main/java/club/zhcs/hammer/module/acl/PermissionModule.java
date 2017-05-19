@@ -46,7 +46,7 @@ public class PermissionModule extends AbstractBaseModule {
 	@POST
 	@AdaptBy(type = JsonAdaptor.class)
 	public Result save(Permission Permission) {
-		return permissionService.save(Permission) == null ? Result.fail("保存权限失败!") : Result.success().addData("Permission", Permission);
+		return permissionService.save(Permission) == null ? Result.fail("保存权限失败!") : Result.success().addData("permission", Permission);
 	}
 
 	@At("/?")
@@ -65,7 +65,7 @@ public class PermissionModule extends AbstractBaseModule {
 	@POST
 	@AdaptBy(type = JsonAdaptor.class)
 	public Result update(Permission Permission) {
-		return permissionService.updateIgnoreNull(Permission) != 1 ? Result.fail("更新权限失败!") : Result.success().addData("Permission", Permission);
+		return permissionService.updateIgnoreNull(Permission) != 1 ? Result.fail("更新权限失败!") : Result.success().addData("permission", Permission);
 	}
 
 }

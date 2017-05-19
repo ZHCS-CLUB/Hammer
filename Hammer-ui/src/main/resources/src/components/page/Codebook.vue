@@ -11,14 +11,19 @@
             </el-breadcrumb>
         </div>
         <el-row>
-            <el-col :span="6">
-                <el-input placeholder="请输入内容" v-model="pager.paras.key" icon="search">
-                    <div slot="append">
-                        <el-button type="primary" icon="search" @click=" pager.page = 1 ;doSearch()">GO</el-button>
-                    </div>
+            <el-col :span="8">
+                <el-input placeholder="请输入内容" v-model="pager.paras.key" >
+                    <el-select v-model="groupId" slot="prepend" placeholder="请选择分组" style="min-width:125px">
+                       <el-option
+                            v-for="item in groups"
+                            :label="item.name"
+                            :value="item.id">
+                        </el-option>
+                    </el-select>
+                    <el-button type="primary" slot="append" icon="search" @click=" pager.page = 1 ;doSearch()">GO</el-button>
                 </el-input>
             </el-col>
-            <el-col :span="6" :offset="12">
+            <el-col :span="6" :offset="10">
                 <el-button type="primary" icon="plus" @click="addEditShow = true ; codebook={groupId:null};nodes=[]">添加码本</el-button>
             </el-col>
         </el-row>
@@ -98,6 +103,7 @@ import moment from 'moment'
 export default {
     data() {
         return {
+            groupId:'',
             nodes: [],
             defaultProps: {
                 children: 'children',
@@ -142,6 +148,7 @@ export default {
                 const data = [];
                  result.data.codes.forEach(item=>{
                     item.children = [{}];
+                    item.depth = row.depth ? row.depth+1:1;
                      data.push(item)
                  })
                 // row.children = data;
@@ -175,10 +182,12 @@ export default {
             }
         },
         doSearch() {
-            this.get('/codebook/search?page=' + this.pager.page + '&key=' + this.pager.paras.key, result => {
+            this.get('/codebook/search?page=' + this.pager.page +'&group='+this.groupId + '&key=' + this.pager.paras.key, result => {
+                console.log(result);
                  this.pager = result.data.pager;
                 this.pager.entities.forEach(item=>{
-                    item.children = [{}]
+                    item.children = [{}];
+                    item.depth = 1;
                 });
             })
         },
@@ -230,7 +239,8 @@ export default {
                 this.pager = result.data.pager;
                 this.pager.paras = { key: '' };
                 this.pager.entities.forEach(item=>{
-                    item.children = [{}]
+                    item.children = [{}];
+                    item.depth = 1;
                 });
             })
         }
