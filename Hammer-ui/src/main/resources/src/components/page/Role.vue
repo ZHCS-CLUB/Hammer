@@ -81,7 +81,7 @@
             </div>
         </el-dialog>
 
-        <el-dialog title="设置权限" :visible.sync="grantShow" size="tiny">
+        <el-dialog title="设置权限" :visible.sync="grantShow">
             <template>
                 <el-transfer v-model="selected" :data="options" :titles="['待选项', '已选项']" filterable></el-transfer>
             </template>
