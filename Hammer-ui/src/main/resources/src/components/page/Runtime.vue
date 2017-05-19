@@ -109,14 +109,14 @@ export default {
                 }]
             },
             bar: {
-                color: ["#20a0ff", "#13CE66", "#F7BA2A", "#FF4949"],
+                color:["#20a0ff","#13CE66","#F7BA2A","#FF4949"],
                 title: {
-                    text: '主机实时运行仪表盘'
+                    text: '柱状图'
                 },
                 xAxis: {
                     data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"]
                 },
-                yAxis: {},
+                yAxis:{},
                 series: [
                     {
                         name: "销量",
@@ -124,7 +124,7 @@ export default {
                         data: [5, 20, 36, 10, 10, 20]
                     }
                 ]
-            }
+            },
         };
     },
     methods: {
@@ -136,23 +136,15 @@ export default {
         const self = this;
         setInterval(function () {
             self.get('/sigar/api?type=ALL', res => {
-                self.$data.line.xAxis[0].data.push(new Date().toLocaleTimeString());//时间戳
-                self.$data.line.series[0].data.push(res.data.cpuUsage);
-                self.$data.line.series[1].data.push(res.data.jvmUasge);
-                self.$data.line.series[2].data.push(res.data.ramUasge);
-                self.$data.line.series[3].data.push(res.data.swapUasge);
-                self.$data.line.series[4].data.push(res.data.diskUsage);
-                self.$data.line.series[5].data.push(res.data.niUsage);
-                self.$data.line.series[6].data.push(res.data.noUsage);
+                self.line.xAxis[0].data.push(new Date().toLocaleTimeString());//时间戳
+                self.line.series[0].data.push(res.data.cpuUsage);
+                self.line.series[1].data.push(res.data.jvmUasge);
+                self.line.series[2].data.push(res.data.ramUasge);
+                self.line.series[3].data.push(res.data.swapUasge);
+                self.line.series[4].data.push(res.data.diskUsage);
+                self.line.series[5].data.push(res.data.niUsage);
+                self.line.series[6].data.push(res.data.noUsage);
             })
-            // for (var index in self.$data.line.series) {
-            //     if (self.$data.line.series[index].length > 15) {
-            //         self.$data.line.series[index] = self.$data.line.series[index].slice(1, 15);
-            //     }
-            // }
-            // if (self.$data.line.xAxis[0].length > 15) {
-            //     self.$data.line.xAxis[0] = self.$data.line.xAxis[0].slice(1, 15)
-            // }
         }, 2000)
 
     }
