@@ -5,9 +5,9 @@
             <div class="user-info">
                 <el-dropdown trigger="click" @command="handleCommand">
                     <span class="el-dropdown-link">
-                                                                                    <img class="user-logo" src="../../../static/img/img.jpg">
-                                                                                    {{username}}
-                                                                                </span>
+                                                                                            <img class="user-logo" src="../../../static/img/img.jpg">
+                                                                                            {{username}}
+                                                                                        </span>
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item command="avatar">上传头像</el-dropdown-item>
                         <el-dropdown-item command="loginout">退出登录</el-dropdown-item>
@@ -16,10 +16,14 @@
             </div>
         </div>
         <el-dialog title="上传头像" v-model="avatarShow" size="tiny">
-            <el-upload class="avatar-uploader" :action="upload" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
-                <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            </el-upload>
+            <el-row>
+                <el-col :span="12" :offset="6">
+                    <el-upload class="avatar-uploader" :action="upload" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+                        <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                    </el-upload>
+                </el-col>
+            </el-row>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="avatarShow = false">取 消</el-button>
                 <el-button type="primary" @click="avatarShow = false">确 定</el-button>
@@ -35,7 +39,7 @@
                 avatarShow: false,
                 imageUrl: '',
                 name: 'Kerbores',
-                upload:baseUrl+'/file/upload'
+                upload: baseUrl + '/file/upload'
             }
         },
         computed: {
@@ -46,19 +50,18 @@
         },
         methods: {
             handleAvatarSuccess(res, file) {
-                console.log(res);
-                this.imageUrl = URL.createObjectURL(file.raw);
+                this.imageUrl = res.data.url;
             },
             beforeAvatarUpload(file) {
-                const isJPG = file.type === 'image/jpeg';
+                const isPic = file.type === 'image/jpeg' || file.type === 'image/png';
                 const isLt2M = file.size / 1024 / 1024 < 2;
-                if (!isJPG) {
-                    this.$message.error('上传头像图片只能是 JPG 格式!');
+                if (!isPic) {
+                    this.$message.error('只能上传图片哦!');
                 }
                 if (!isLt2M) {
                     this.$message.error('上传头像图片大小不能超过 2MB!');
                 }
-                return isJPG && isLt2M;
+                return isPic && isLt2M;
             },
             handleCommand(command) {
                 if (command == 'loginout') {
@@ -76,12 +79,12 @@
     }
 </script>
 
-<style >
-    .avatar-uploader{
-        width:180px
+<style>
+    .avatar-uploader {
+        width: 180px
     }
-    .el-upload--text{
-        width:180px
+    .el-upload--text {
+        width: 180px
     }
     .avatar-uploader .el-upload {
         border: 1px dashed #d9d9d9;
