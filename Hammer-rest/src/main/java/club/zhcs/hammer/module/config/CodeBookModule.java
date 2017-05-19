@@ -41,6 +41,18 @@ public class CodeBookModule extends AbstractBaseModule {
 		return Result.success().addData("pager", pager);
 	}
 
+	// @At
+	// @GET
+	// public Result group(@Param("group") int group, @Param(value = "key", df =
+	// "") String key, @Param(value = "page", df = "1") int page) {
+	// Pager<CodeBook> pager =
+	// codebookService.searchByKeyAndPage(_fixSearchKey(key), _fixPage(page),
+	// Cnd.where("parentId", "=", 0).andEX("groupId", "=", group), "name",
+	// "value");
+	// pager.addParas("key", key);
+	// return Result.success().addData("pager", pager);
+	// }
+
 	@At
 	@POST
 	@AdaptBy(type = JsonAdaptor.class)
