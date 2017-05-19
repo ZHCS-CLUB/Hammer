@@ -11,16 +11,16 @@
             访问地址：<a href="https://github.com/xlsdg/vue-echarts-v3" target="_blank">vue-echarts-v3</a>
         </div>
         <div class="echarts">
-            <IEcharts :option="line" ></IEcharts>
+            <i-echarts :option="line" ></i-echarts>
         </div>
         <div class="echarts">
-            <IEcharts :option="bar" ></IEcharts>
+            <i-echarts :option="bar" ></i-echarts>
         </div>
         <div class="echarts">
-            <IEcharts :option="pie" ></IEcharts>
+            <i-echarts :option="pie" ></i-echarts>
         </div>
         <div class="echarts">
-            <IEcharts :option="pie_radius" ></IEcharts>
+            <i-echarts :option="pie_radius" ></i-echarts>
         </div>
     </div>
 </template>
