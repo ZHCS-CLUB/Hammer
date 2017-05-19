@@ -142,6 +142,7 @@ export default {
                 const data = [];
                  result.data.codes.forEach(item=>{
                     item.children = [{}];
+                    item.depth = row.depth ? row.depth+1:1;
                      data.push(item)
                  })
                 // row.children = data;
@@ -178,7 +179,8 @@ export default {
             this.get('/codebook/search?page=' + this.pager.page + '&key=' + this.pager.paras.key, result => {
                  this.pager = result.data.pager;
                 this.pager.entities.forEach(item=>{
-                    item.children = [{}]
+                    item.children = [{}];
+                    item.depth = 1;
                 });
             })
         },
@@ -230,7 +232,8 @@ export default {
                 this.pager = result.data.pager;
                 this.pager.paras = { key: '' };
                 this.pager.entities.forEach(item=>{
-                    item.children = [{}]
+                    item.children = [{}];
+                    item.depth = 1;
                 });
             })
         }
