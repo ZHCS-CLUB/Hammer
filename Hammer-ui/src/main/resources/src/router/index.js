@@ -36,6 +36,10 @@ export default new Router({
                     component: resolve => require(['../components/page/Codebook.vue'], resolve)
                 },
                 {
+                    path: '/settings',
+                    component: resolve => require(['../components/page/Settings.vue'], resolve)
+                },
+                {
                     path: '/datasource',
                     component: resolve => require(['../components/page/DataSource.vue'], resolve)
                 },
