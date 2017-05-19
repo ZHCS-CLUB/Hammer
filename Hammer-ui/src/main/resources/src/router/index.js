@@ -48,6 +48,14 @@ export default new Router({
                     component: resolve => require(['../components/page/Runtime.vue'], resolve)
                 },
                 {
+                    path: '/trace',
+                    component: resolve => require(['../components/page/Trace.vue'], resolve)
+                },
+                {
+                    path: '/log',
+                    component: resolve => require(['../components/page/Log.vue'], resolve)
+                },
+                {
                     path: '/basetable',
                     component: resolve => require(['../components/page/BaseTable.vue'], resolve)
                 },
