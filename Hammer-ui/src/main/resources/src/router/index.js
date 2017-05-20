@@ -90,6 +90,10 @@ export default new Router({
             ]
         },
         {
+            path: '/mobile',
+            component: resolve => require(['../components/page/Mobile.vue'], resolve)
+        },
+        {
             path: '/login',
             component: resolve => require(['../components/page/Login.vue'], resolve)
         },
