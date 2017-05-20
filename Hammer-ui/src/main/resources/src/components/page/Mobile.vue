@@ -25,7 +25,7 @@
 
     <div class="page-part">
       <mt-field label="验证码" placeholder="输入验证码">
-        <img src="" height="48px" width="100px">
+        <img :src="a" height="48px" width="100px">
       </mt-field>
     </div>
   </div>
@@ -33,6 +33,11 @@
 
 <script>
 export default {
-  name: 'page-field'
+  name: 'page-field',
+  data(){
+      return {
+          a:baseUrl+'/captcha'
+      }
+  }
 };
 </script>
