@@ -5,7 +5,7 @@
             <div class="user-info">
                 <el-dropdown trigger="click" @command="handleCommand">
                     <span class="el-dropdown-link">
-                                                                                            <img class="user-logo" src="../../../static/img/img.jpg">
+                                                                                            <img class="user-logo" :src="logo">
                                                                                             {{username}}
                                                                                         </span>
                     <el-dropdown-menu slot="dropdown">
@@ -39,8 +39,12 @@
                 avatarShow: false,
                 imageUrl: '',
                 name: 'Kerbores',
-                upload: baseUrl + '/file/upload'
+                upload: baseUrl + '/file/upload',
+                logo:'../../../static/img/img.jpg'
             }
+        },
+        mounted(){
+            this.logo =  localStorage.getItem('head');
         },
         computed: {
             username() {
@@ -50,6 +54,7 @@
         },
         methods: {
             handleAvatarSuccess(res, file) {
+                this.logo = res.data.url;
                 this.imageUrl = res.data.url;
             },
             beforeAvatarUpload(file) {

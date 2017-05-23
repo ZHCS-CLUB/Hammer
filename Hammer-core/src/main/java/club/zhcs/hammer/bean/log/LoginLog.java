@@ -10,15 +10,8 @@ import org.nutz.lang.Times;
 import club.zhcs.titans.utils.db.po.Entity;
 
 /**
- * @author Kerbores(kerbores@gmail.com)
- *
- * @project bean
- *
- * @file LoginLog.java
- *
- * @description 登录日志
- *
- * @time 2016年3月15日 下午4:37:02
+ * 
+ * @author kerbores@gmail.com
  *
  */
 @Table("t_user_login")
@@ -39,11 +32,10 @@ public class LoginLog extends Entity {
 	@Column("login_ip")
 	@Comment("登录 ip")
 	private String ip;
-	
+
 	@Column("login_status")
 	@Comment("登录成功与否")
 	private boolean success;
-	
 
 	public boolean isSuccess() {
 		return success;

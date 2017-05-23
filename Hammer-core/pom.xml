@@ -78,5 +78,10 @@
 			<artifactId>nutz-plugins-cache</artifactId>
 			<version>${nutz.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>com.qiniu</groupId>
+			<artifactId>qiniu-java-sdk</artifactId>
+			<version>7.2.6</version>
+		</dependency>
 	</dependencies>
 </project>

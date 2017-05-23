@@ -7,7 +7,7 @@ var ioc = {
 			paths : [ 'conf', {
 				sys : "hammer.config"
 			}, {
-				sys : "hammer.conmon.config"
+				sys : "hammer.common.config"
 			} ]
 		}
 	},
