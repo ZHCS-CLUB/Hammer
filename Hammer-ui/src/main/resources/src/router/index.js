@@ -56,6 +56,10 @@ export default new Router({
                     component: resolve => require(['../components/page/Log.vue'], resolve)
                 },
                 {
+                    path: '/map',
+                    component: resolve => require(['../components/page/Map.vue'], resolve)
+                },
+                {
                     path: '/basetable',
                     component: resolve => require(['../components/page/BaseTable.vue'], resolve)
                 },

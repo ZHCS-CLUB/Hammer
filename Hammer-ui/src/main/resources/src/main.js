@@ -3,6 +3,7 @@ import App from './App';
 import router from './router';
 import ElementUI from 'element-ui';
 import Mint from 'mint-ui';
+import BaiduMap from 'vue-baidu-map'
 import 'mint-ui/lib/style.css';
 import 'element-ui/lib/theme-default/index.css'; // 默认主题
 // import '../static/css/theme-green/index.css';       // 浅绿色主题
@@ -107,6 +108,10 @@ Vue.prototype.upload = function(url, body, success, bizFail) { //全局文件上
         });
 }
 Vue.use(ElementUI);
+Vue.use(BaiduMap, {
+    // ak 是在百度地图开发者平台申请的密钥 详见 http://lbsyun.baidu.com/apiconsole/key */
+    ak: 'CRHkMGE7Db1USNSyFXqVDmdv'
+})
 Vue.use(Mint);
 new Vue({
     router,

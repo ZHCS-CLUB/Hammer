@@ -20,7 +20,7 @@
         <el-table :data="pager.entities" border style="width: 100%">
             <el-table-column prop="id" label="ID" sortable>
             </el-table-column>
-            <el-table-column prop="loginTime" label="时间">
+            <el-table-column prop="loginTime" label="时间" show-overflow-tooltip :formatter="formatter">
             </el-table-column>
             <el-table-column prop="account" label="用户">
             </el-table-column>
@@ -65,6 +65,9 @@ export default {
             }else{
                 this.loadData();
             }
+        },
+        formatter(row, column){
+             return moment(row.loginTime, "YYYY-MM-DD hh:mm:ss").format('YYYY/MM/DD hh:mm:ss');
         },
         doSearch(){
             this.get('/trace/search?page=' + this.pager.page + '&key=' + this.pager.paras.key, result => {

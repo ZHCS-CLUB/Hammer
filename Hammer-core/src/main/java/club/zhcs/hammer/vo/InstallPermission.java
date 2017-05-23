@@ -66,6 +66,10 @@ public enum InstallPermission {
 	 * 权限管理
 	 */
 	PERMISSION_LIST("permission.list", "权限管理"),
+	/*
+	 * 
+	 */
+	PERMISSION_ADD("permission.add", "权限添加"),
 	/**
 	 * ++++++++++++++++++++++访问控制++++++++++++++++++++++++++++++++
 	 */
@@ -122,6 +126,14 @@ public enum InstallPermission {
 	 * 
 	 */
 	CODEBOOK_DELETE("codebook.delete", "数据状态"),
+	/**
+	 * 
+	 */
+	PERMISSION_EDIT("permission.edit", "编辑权限"),
+	/**
+	 * 
+	 */
+	PERMISSION_DELETE("permission.delete", "删除权限"),
 	/**
 	 * 
 	 */
