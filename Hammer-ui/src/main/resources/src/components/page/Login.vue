@@ -64,7 +64,7 @@ export default {
                         localStorage.setItem('roles', JSON.stringify(data.data.roles));
                         localStorage.setItem('permissions', JSON.stringify(data.data.permissions));
                         localStorage.setItem('loginUser', data.data.loginUser.realName || data.data.loginUser.name);
-                        localStorage.setItem('head', data.data.loginUser.headKey || '../../../static/img/img.jpg');
+                        localStorage.setItem('head', data.data.loginUser.headKey ? 'http://7xlb6l.com1.z0.glb.clouddn.com/'+data.data.loginUser.headKey : '../../../static/img/img.jpg');
                         self.$router.push('/readme');
                     }, result => {
                         this.$message({
