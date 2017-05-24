@@ -21,6 +21,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>ROOT</finalName>
 	</build>
 	<packaging>war</packaging>
 	<dependencies>

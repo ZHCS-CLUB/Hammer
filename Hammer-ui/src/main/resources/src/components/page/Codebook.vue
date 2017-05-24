@@ -75,7 +75,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="上级" :label-width="formLabelWidth" prop="parentId">
-                    <el-tree :data="nodes" show-checkbox check-strictly lazy :load="loadNode" node-key="id" ref="tree" highlight-current :props="defaultProps">
+                    <el-tree :data="nodes" show-checkbox check-strictly lazy :load="loadNode" node-key="id" ref="tree" highlight-current :props="defaultProps" @check-change="check">
                     </el-tree>
                 </el-form-item>
                 <el-form-item label="Key" :label-width="formLabelWidth" prop="name">
@@ -143,6 +143,12 @@ export default {
     },
     watch: {},
     methods: {
+        check(node,s,l){
+            if(this.$refs.tree.getCheckedNodes().length > 1){
+                this.$message('只能选择一个父节点');
+                this.$refs.tree.setChecked(node,false);
+            }
+        },
         remote(row,callback){
             this.get('/codebook/sub/'+row.id,result=>{
                 const data = [];
@@ -192,8 +198,9 @@ export default {
             })
         },
         saveOrUpdateCodebook(formName) {
-            if (this.$refs.tree.getCheckedNodes(true).length) {
-                this.codebook.parentId = this.$refs.tree.getCheckedNodes(true)[0].id
+            debugger;
+            if (this.$refs.tree.getCheckedNodes().length) {
+                this.codebook.parentId = this.$refs.tree.getCheckedNodes()[0].id
             }
             this.$refs[formName].validate(valid => {
                 if (valid) {
